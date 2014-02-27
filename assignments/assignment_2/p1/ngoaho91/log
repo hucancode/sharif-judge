@@ -1,18 +1,13 @@
 cd /var/www/judge/tester;
-./tester.sh /var/www/judge/assignments/assignment_2/p1 'ngoaho91' 'hello-1' 'hello-1-1' cpp 0.5 1 50000 1048576 diff -bB 1 1 1 0 1
+./tester.sh /var/www/judge/assignments/assignment_2/p1 'ngoaho91' 'hello' 'hello-11' cs 2 3 50000 1048576 diff -bB 1 1 0 0 1
 Starting tester...
-Fri Feb 14 14:10:47 ICT 2014
-Language: cpp
-Time Limit: 0.5 s
+Thu Feb 27 11:11:00 ICT 2014
+Language: cs
+Time Limit: 2 s
 Memory Limit: 50000 kB
 Output size limit: 1048576 bytes
-EasySandbox: true
-C/C++ Shield: true
-Compiling as cpp
-Enabling EasySandbox
-EasySandbox is not built. Disabling EasySandbox...
-Enabling Shield For C/C++
-Compiled. Exit Code=0  Execution Time: 246 ms
+Compiling as C#
+Compiled. Exit Code=0  Execution Time: 463 ms
 
 Testing...
 1 test cases found
@@ -24,4 +19,4 @@ ACCEPTED
 
 Score from 10000: 10000
 
-Total Execution Time: 341 ms
+Total Execution Time: 591 ms

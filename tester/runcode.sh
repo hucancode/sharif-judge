@@ -37,8 +37,10 @@ ulimit -t $TIMELIMITINT
 
 if $TIMEOUT_EXISTS; then
 	sudo -u ha timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err
+	#timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err
 else
-	sudo -u ha $CMD <$IN >out 2>err        
+	sudo -u ha $CMD <$IN >out 2>err
+	#$CMD <$IN >out 2>err
 fi
 # You can run submitted codes as another user:
 #
@@ -52,7 +54,7 @@ fi
 # e.g. In Ubuntu (Apache running under www-data), run visudo and add this line:
 # www-data ALL=(another_user) NOPASSWD: ALL
 EC=$?
-
+echo -e "sudo -u ha timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err" >>/home/hu/Desktop/log
 # KILL all processes of another_user (A process may still be alive!)
 # If you are running codes as another_user, also uncomment this line:
 sudo -u ha pkill -9 -u ha

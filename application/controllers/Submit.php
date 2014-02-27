@@ -60,6 +60,7 @@ class Submit extends CI_Controller
 		switch ($language) {
 			case 'c': return 'c';
 			case 'c++': return 'cpp';
+			case 'c#': return 'cs';
 			case 'python 2': return 'py2';
 			case 'python 3': return 'py3';
 			case 'java': return 'java';
@@ -78,6 +79,7 @@ class Submit extends CI_Controller
 		switch ($type) {
 			case 'c': return ($extension==='c'?TRUE:FALSE);
 			case 'cpp': return ($extension==='cpp'?TRUE:FALSE);
+			case 'cs': return ($extension==='cs'?TRUE:FALSE);
 			case 'py2': return ($extension==='py'?TRUE:FALSE);
 			case 'py3': return ($extension==='py'?TRUE:FALSE);
 			case 'java': return ($extension==='java'?TRUE:FALSE);
@@ -94,7 +96,7 @@ class Submit extends CI_Controller
 	{
 		if ($str=='0')
 			return FALSE;
-		if (in_array( strtolower($str),array('c', 'c++', 'python 2', 'python 3', 'java', 'zip', 'pdf')))
+		if (in_array( strtolower($str),array('c', 'c++', 'c#', 'python 2', 'python 3', 'java', 'zip', 'pdf')))
 			return TRUE;
 		return FALSE;
 	}

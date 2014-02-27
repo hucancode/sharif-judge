@@ -355,10 +355,14 @@ if [ "$EXT" = "c" ] || [ "$EXT" = "cpp" ]; then
 fi
 
 
+########################################################################################################
+############################################ COMPILING C# ###########################################
+########################################################################################################
+
 if [ "$EXT" = "cs" ]; then
-	cp $PROBLEMPATH/$UN/$FILENAME.cs $MAINFILENAME.cs
+	cp $PROBLEMPATH/$UN/$FILENAME.cs $FILENAME.cs
 	shj_log "Compiling as C#"
-	gmcs $MAINFILENAME.cs >/dev/null 2>cerr
+	gmcs $FILENAME.cs >/dev/null 2>cerr
 	EXITCODE=$?
 	COMPILE_END_TIME=$(($(date +%s%N)/1000000));
 	shj_log "Compiled. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"
@@ -486,9 +490,9 @@ for((i=1;i<=TST;i++)); do
 	elif [ "$EXT" = "cs" ]; then
 		#./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT mono ./$MAINFILENAME.EXE"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT mono ./$FILENAME.exe"
 		else
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "mono ./$MAINFILENAME.EXE"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "mono ./$FILENAME.exe"
 		fi
 		EXITCODE=$?
 	else
@@ -529,16 +533,14 @@ for((i=1;i<=TST;i++)); do
 	fi
 	
 	if [ $EXITCODE -eq 137 ]; then
-		#shj_log "Time Limit Exceeded (Exit code=$EXITCODE)"
-		#echo "<span style='color: orange;'>Time Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
-		shj_log "Killed"
-		echo "<span class=\"shj_o\">Killed</span>" >>$PROBLEMPATH/$UN/result.html
+		shj_log "Time Limit Exceeded (Exit code=$EXITCODE)"
+		echo "<span style='color: orange;'>Time Limit Exceeded</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
 	fi
 
 
 	if [ $EXITCODE -ne 0 ]; then
-		shj_log "Runtime Error"
+		shj_log "Runtime Error (Exit code=$EXITCODE)"
 		echo "<span class=\"shj_o\">Runtime Error</span>" >>$PROBLEMPATH/$UN/result.html
 		continue
 	fi

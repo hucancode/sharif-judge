@@ -55,7 +55,7 @@ EC=$?
 
 # KILL all processes of another_user (A process may still be alive!)
 # If you are running codes as another_user, also uncomment this line:
-sudo -u ha pkill -9 -u another_user
+sudo -u ha pkill -9 -u ha
 
 # Return exitcode
 exit $EC

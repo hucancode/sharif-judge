@@ -486,7 +486,7 @@ for((i=1;i<=TST;i++)); do
 	elif [ "$EXT" = "cs" ]; then
 		#./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$MAINFILENAME.EXE"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT mono ./$MAINFILENAME.EXE"
 		else
 			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "mono ./$MAINFILENAME.EXE"
 		fi

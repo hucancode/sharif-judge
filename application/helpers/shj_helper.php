@@ -76,6 +76,7 @@ if ( ! function_exists('filetype_to_extension'))
 		switch ($file_type) {
 			case 'c': return 'c';
 			case 'cpp': return 'cpp';
+			case 'cs': return 'cs';
 			case 'py2': return 'py';
 			case 'py3': return 'py';
 			case 'java': return 'java';
@@ -89,7 +90,6 @@ if ( ! function_exists('filetype_to_extension'))
 
 if ( ! function_exists('filetype_to_language'))
 {
-
 	/**
 	 * Converts code type to language
 	 */
@@ -99,6 +99,7 @@ if ( ! function_exists('filetype_to_language'))
 		switch ($file_type) {
 			case 'c': return 'C';
 			case 'cpp': return 'C++';
+			case 'cs' : return 'C#';
 			case 'py2': return 'Py 2';
 			case 'py3': return 'Py 3';
 			case 'java': return 'Java';
@@ -115,8 +116,8 @@ if ( ! function_exists('process_the_queue'))
 	function process_the_queue()
 	{
 		$cmd = 'php '.escapeshellarg(FCPATH.'index.php').' queueprocess run >/dev/null 2>/dev/null &';
-        	$output = shell_exec($cmd);
-file_put_contents("/home/hu/Desktop/log.txt","process the queue with cmd=$cmd\r\noutput=$output\r\n",FILE_APPEND|LOCK_EX);	}
+        $output = shell_exec($cmd);
+	}
 }
 
 

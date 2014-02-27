@@ -15,7 +15,6 @@ class Queueprocess extends CI_Controller
 		if ( ! is_cli() )
 			show_404();
 		$this->load->model('queue_model')->model('submit_model');
-file_put_contents("/home/hu/Desktop/log.txt","queue process construct\r\n",FILE_APPEND|LOCK_EX);
 	}
 
 
@@ -45,13 +44,10 @@ file_put_contents("/home/hu/Desktop/log.txt","queue process run\r\n",FILE_APPEND
 		}
 		if ($this->settings_model->get_setting('queue_is_working'))
 		{
-file_put_contents("/home/hu/Desktop/log.txt","queue is working, exit\r\n",FILE_APPEND|LOCK_EX);
 			exit;
 		}
-file_put_contents("/home/hu/Desktop/log.txt","set queue is working = 1\r\n",FILE_APPEND|LOCK_EX);
 		$this->settings_model->set_setting('queue_is_working', '1');
 		do { // loop over queue items
-			file_put_contents("/home/hu/Desktop/log.txt","queue item processing\r\n",FILE_APPEND|LOCK_EX);
 			$submit_id = $queue_item['submit_id'];
 			$username = $queue_item['username'];
 			$assignment = $queue_item['assignment'];
@@ -91,6 +87,8 @@ file_put_contents("/home/hu/Desktop/log.txt","set queue is working = 1\r\n",FILE
 				$time_limit = $problem['java_time_limit']/1000;
 			elseif ($file_extension === 'py')
 				$time_limit = $problem['python_time_limit']/1000;
+			elseif ($file_extension === 'cs')
+				$time_limit = $problem['cs_time_limit']/1000;
 			$time_limit = round($time_limit, 3);
 			$time_limit_int = floor($time_limit) + 1;
 
@@ -106,7 +104,6 @@ file_put_contents("/home/hu/Desktop/log.txt","set queue is working = 1\r\n",FILE
 			// Running tester (judging the code) //
 			///////////////////////////////////////
 			putenv('LANG=en_US.UTF-8');
-file_put_contents("/home/hu/Desktop/log.txt","queue cmd, $cmd\r\n",FILE_APPEND|LOCK_EX);
 			$output = trim(shell_exec($cmd));
 
 			// Deleting the jail folder, if still exists
@@ -127,7 +124,7 @@ file_put_contents("/home/hu/Desktop/log.txt","queue cmd, $cmd\r\n",FILE_APPEND|L
 
 			// Save the result
 			$this->queue_model->save_judge_result_in_db($submission, $type);
-file_put_contents("/home/hu/Desktop/log.txt","queue item judged\r\n",FILE_APPEND|LOCK_EX);
+			//file_put_contents("/home/hu/Desktop/log.txt","queue item judged\r\n",FILE_APPEND|LOCK_EX);
 			// Remove the judged item from queue
 			$this->queue_model->remove_item($username, $assignment, $problem['id'], $submit_id);
 
