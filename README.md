@@ -1,8 +1,11 @@
 # Sharif Judge
-clone from here http://sharifjudge.ir
+- clone from here http://sharifjudge.ir
+- c# section developed by me
+
 # System Requirement
 - Linux Ubuntu 12.04
 - Loged in user must have permission of rw to folders 'tester', 'assignments'
+
 # Required Package
 - g++
 - javac
