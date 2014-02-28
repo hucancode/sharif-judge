@@ -23,4 +23,8 @@ PHP
 + mysql-server
 + php5-cli
 + php5-mysql
+
+Optional
+---------------------
++ perl
 + phpmyadmin
