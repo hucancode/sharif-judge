@@ -6,7 +6,7 @@
 + Linux Ubuntu 12.04
 + Logged in user must have permission of rw to folders 'tester', 'assignments'
 + PHP must have permission to run shell command. For example, this command should run correctly `echo shell_exec("php -v");`
-+ Must have an user account named 'ha' with no limited permission, no network, only can read & write file on restricted folder
++ Must have an user account named 'ha' with limited permission, no network, only can read & write file on restricted folder
 
 # Required Package
 Compiler
