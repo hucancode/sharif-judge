@@ -271,7 +271,7 @@ class __TwigTemplate_c0cabf112feeeb2131215723c3a0e668d97cc126d4c4ac3a5c2e7ca1cdf
             // line 110
             echo "\t\t<tr data-u=\"";
             if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "username"), "html", null, true);
+            echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "userid"), "html", null, true);
             echo "\" data-a=\"";
             if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
             echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "assignment"), "html", null, true);
@@ -338,7 +338,7 @@ class __TwigTemplate_c0cabf112feeeb2131215723c3a0e668d97cc126d4c4ac3a5c2e7ca1cdf
                 if (isset($context["view"])) { $_view_ = $context["view"]; } else { $_view_ = null; }
                 if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
                 if (isset($context["filter_problem"])) { $_filter_problem_ = $context["filter_problem"]; } else { $_filter_problem_ = null; }
-                echo site_url((((("submissions/" . $_view_) . "/user/") . $this->getAttribute($_submission_, "username")) . (($_filter_problem_) ? (("/problem/" . $_filter_problem_)) : (""))));
+                echo site_url((((("submissions/" . $_view_) . "/user/") . $this->getAttribute($_submission_, "userid")) . (($_filter_problem_) ? (("/problem/" . $_filter_problem_)) : (""))));
                 echo "\">";
                 if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
                 echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "username"), "html", null, true);
@@ -372,7 +372,7 @@ class __TwigTemplate_c0cabf112feeeb2131215723c3a0e668d97cc126d4c4ac3a5c2e7ca1cdf
 \t\t\t<td>";
             // line 129
             if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "pre_score"), "html", null, true);
+            echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "score"), "html", null, true);
             echo "</td>
 \t\t\t<td>
 \t\t\t\t<span class=\"tiny_text\" ";
@@ -417,124 +417,80 @@ class __TwigTemplate_c0cabf112feeeb2131215723c3a0e668d97cc126d4c4ac3a5c2e7ca1cdf
 \t\t\t\t";
             // line 143
             if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-            if (($this->getAttribute($_submission_, "status") == "Uploaded")) {
+            if (($this->getAttribute($_submission_, "status") == "PENDING")) {
                 // line 144
-                echo "\t\t\t\t\tUploaded
-\t\t\t\t";
-            } else {
+                echo "\t\t\t\t\t";
+                $context["submission_class"] = "btn";
+                // line 145
+                echo "\t\t\t\t";
+            } elseif (($this->getAttribute($_submission_, "status") == "ACCEPTED")) {
                 // line 146
                 echo "\t\t\t\t\t";
-                if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-                if ((twig_lower_filter($this->env, $this->getAttribute($_submission_, "status")) == "pending")) {
-                    // line 147
-                    echo "\t\t\t\t\t\t";
-                    $context["submission_class"] = "btn";
-                    // line 148
-                    echo "\t\t\t\t\t";
-                } elseif ((twig_lower_filter($this->env, $this->getAttribute($_submission_, "status")) == "score")) {
-                    // line 149
-                    echo "\t\t\t\t\t\t";
-                    if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-                    $context["submission_class"] = (($this->getAttribute($_submission_, "fullmark")) ? ("btn shj-green") : ("btn shj-red"));
-                    // line 150
-                    echo "\t\t\t\t\t";
-                } else {
-                    // line 151
-                    echo "\t\t\t\t\t\t";
-                    $context["submission_class"] = "btn shj-blue";
-                    // line 152
-                    echo "\t\t\t\t\t";
-                }
-                // line 153
-                echo "\t\t\t\t\t<div class=\"";
-                if (isset($context["submission_class"])) { $_submission_class_ = $context["submission_class"]; } else { $_submission_class_ = null; }
-                echo twig_escape_filter($this->env, $_submission_class_, "html", null, true);
-                echo "\" data-type=\"result\" >
-\t\t\t\t\t\t";
-                // line 154
-                if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-                if (($this->getAttribute($_submission_, "status") == "SCORE")) {
-                    // line 155
-                    echo "\t\t\t\t\t\t\t";
-                    if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-                    echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "final_score"), "html", null, true);
-                    echo "
-\t\t\t\t\t\t";
-                } else {
-                    // line 157
-                    echo "\t\t\t\t\t\t\t";
-                    if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-                    echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "status"), "html", null, true);
-                    echo "
-\t\t\t\t\t\t";
-                }
-                // line 159
-                echo "\t\t\t\t\t</div>
-\t\t\t\t";
-            }
-            // line 161
-            echo "\t\t\t</td>
-\t\t\t<td>
-\t\t\t\t";
-            // line 163
-            if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-            if ((($this->getAttribute($_submission_, "file_type") == "zip") || ($this->getAttribute($_submission_, "file_type") == "pdf"))) {
-                // line 164
-                echo "\t\t\t\t\t<div class=\"btn shj-orange\" data-type=\"download\">Download</div>
-\t\t\t\t";
+                $context["submission_class"] = "btn shj-green";
+                // line 147
+                echo "\t\t\t\t";
+            } elseif (($this->getAttribute($_submission_, "status") == "REJECTED")) {
+                // line 148
+                echo "\t\t\t\t\t";
+                $context["submission_class"] = "btn shj-red";
+                // line 149
+                echo "\t\t\t\t";
             } else {
-                // line 166
-                echo "\t\t\t\t\t<div class=\"btn shj-orange\" data-type=\"code\" >Code</div>
-\t\t\t\t";
+                // line 150
+                echo "\t\t\t\t\t";
+                $context["submission_class"] = "btn shj-blue";
+                // line 151
+                echo "\t\t\t\t";
             }
-            // line 168
-            echo "\t\t\t</td>
+            // line 152
+            echo "\t\t\t\t<div class=\"";
+            if (isset($context["submission_class"])) { $_submission_class_ = $context["submission_class"]; } else { $_submission_class_ = null; }
+            echo twig_escape_filter($this->env, $_submission_class_, "html", null, true);
+            echo "\" data-type=\"result\" >
+\t\t\t\t\t";
+            // line 153
+            if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
+            echo twig_escape_filter($this->env, $this->getAttribute($_submission_, "status"), "html", null, true);
+            echo "
+\t\t\t\t</div>
+\t\t\t</td>
+\t\t\t<td>
+\t\t\t\t<div class=\"btn shj-orange\" data-type=\"code\" >Code</div>
+\t\t\t</td>
 \t\t\t";
-            // line 169
+            // line 159
             if (isset($context["view"])) { $_view_ = $context["view"]; } else { $_view_ = null; }
             if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
             if ((($_view_ == "final") && ($_user_level_ > 0))) {
-                // line 170
+                // line 160
                 echo "\t\t\t<td>
-\t\t\t\t";
-                // line 171
-                if (isset($context["submission"])) { $_submission_ = $context["submission"]; } else { $_submission_ = null; }
-                if (($this->getAttribute($_submission_, "status") == "Uploaded")) {
-                    // line 172
-                    echo "\t\t\t\t\t---
-\t\t\t\t";
-                } else {
-                    // line 174
-                    echo "\t\t\t\t\t<div class=\"btn\" data-type=\"log\" >Log</div>
-\t\t\t\t";
-                }
-                // line 176
-                echo "\t\t\t</td>
+\t\t\t\t<div class=\"btn\" data-type=\"log\" >Log</div>
+\t\t\t</td>
 \t\t\t";
             }
-            // line 178
+            // line 164
             echo "\t\t\t";
             if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
             if (($_user_level_ >= 2)) {
-                // line 179
+                // line 165
                 echo "\t\t\t\t<td>
 \t\t\t\t\t<a href=\"#\" class=\"shj_rejudge\"><i class=\"fa fa-refresh fa-lg color10\"></i></a>
 \t\t\t\t</td>
 \t\t\t";
             }
-            // line 183
+            // line 169
             echo "\t\t</tr>
 \t";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['submission'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 185
+        // line 171
         echo "</table>
 
 <p>
 ";
-        // line 188
+        // line 174
         if (isset($context["pagination"])) { $_pagination_ = $context["pagination"]; } else { $_pagination_ = null; }
         echo $_pagination_;
         echo "
@@ -543,14 +499,14 @@ class __TwigTemplate_c0cabf112feeeb2131215723c3a0e668d97cc126d4c4ac3a5c2e7ca1cdf
 ";
     }
 
-    // line 195
+    // line 181
     public function block_body_end($context, array $blocks = array())
     {
-        // line 196
+        // line 182
         echo "<div id=\"shj_modal\" class=\"reveal-modal xlarge\">
 \t<div class=\"modal_inside\">
 \t\t<div style=\"text-align: center;\">Loading<br><img src=\"";
-        // line 198
+        // line 184
         echo base_url("assets/images/loading.gif");
         echo "\"/></div>
 \t</div>
@@ -571,6 +527,6 @@ class __TwigTemplate_c0cabf112feeeb2131215723c3a0e668d97cc126d4c4ac3a5c2e7ca1cdf
 
     public function getDebugInfo()
     {
-        return array (  554 => 198,  550 => 196,  547 => 195,  538 => 188,  533 => 185,  526 => 183,  520 => 179,  516 => 178,  512 => 176,  508 => 174,  504 => 172,  501 => 171,  498 => 170,  494 => 169,  491 => 168,  487 => 166,  483 => 164,  480 => 163,  476 => 161,  472 => 159,  465 => 157,  458 => 155,  455 => 154,  449 => 153,  446 => 152,  443 => 151,  440 => 150,  436 => 149,  433 => 148,  430 => 147,  426 => 146,  422 => 144,  419 => 143,  413 => 141,  408 => 140,  402 => 138,  399 => 137,  392 => 135,  388 => 133,  385 => 132,  380 => 131,  374 => 129,  369 => 128,  354 => 127,  348 => 125,  338 => 124,  335 => 123,  329 => 121,  321 => 120,  314 => 118,  310 => 117,  306 => 116,  299 => 113,  296 => 112,  293 => 111,  272 => 110,  268 => 109,  265 => 108,  261 => 107,  256 => 106,  252 => 105,  246 => 104,  243 => 103,  240 => 102,  238 => 101,  235 => 100,  220 => 87,  211 => 80,  207 => 78,  203 => 77,  199 => 75,  196 => 74,  186 => 66,  181 => 63,  177 => 61,  173 => 60,  169 => 59,  165 => 57,  162 => 56,  157 => 53,  153 => 51,  150 => 50,  142 => 49,  139 => 48,  136 => 47,  125 => 38,  122 => 37,  118 => 36,  109 => 32,  106 => 31,  103 => 30,  97 => 28,  94 => 27,  91 => 26,  85 => 21,  81 => 20,  77 => 19,  72 => 17,  68 => 16,  63 => 15,  60 => 14,  52 => 10,  44 => 9,  37 => 8,  31 => 6,);
+        return array (  510 => 184,  506 => 182,  503 => 181,  494 => 174,  489 => 171,  482 => 169,  476 => 165,  472 => 164,  466 => 160,  462 => 159,  452 => 153,  446 => 152,  443 => 151,  440 => 150,  437 => 149,  434 => 148,  431 => 147,  428 => 146,  425 => 145,  422 => 144,  419 => 143,  413 => 141,  408 => 140,  402 => 138,  399 => 137,  392 => 135,  388 => 133,  385 => 132,  380 => 131,  374 => 129,  369 => 128,  354 => 127,  348 => 125,  338 => 124,  335 => 123,  329 => 121,  321 => 120,  314 => 118,  310 => 117,  306 => 116,  299 => 113,  296 => 112,  293 => 111,  272 => 110,  268 => 109,  265 => 108,  261 => 107,  256 => 106,  252 => 105,  246 => 104,  243 => 103,  240 => 102,  238 => 101,  235 => 100,  220 => 87,  211 => 80,  207 => 78,  203 => 77,  199 => 75,  196 => 74,  186 => 66,  181 => 63,  177 => 61,  173 => 60,  169 => 59,  165 => 57,  162 => 56,  157 => 53,  153 => 51,  150 => 50,  142 => 49,  139 => 48,  136 => 47,  125 => 38,  122 => 37,  118 => 36,  109 => 32,  106 => 31,  103 => 30,  97 => 28,  94 => 27,  91 => 26,  85 => 21,  81 => 20,  77 => 19,  72 => 17,  68 => 16,  63 => 15,  60 => 14,  52 => 10,  44 => 9,  37 => 8,  31 => 6,);
     }
 }

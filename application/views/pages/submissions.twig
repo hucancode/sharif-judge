@@ -107,7 +107,7 @@
 			{% set j = j+1 %}
 		{% endif %}
 		{% set un = submission.username %}
-		<tr data-u="{{ submission.username }}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{ submission.submit_id }}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
+		<tr data-u="{{ submission.userid }}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{ submission.submit_id }}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
 		{% if view == 'all' %}
 			<td>
 				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>
@@ -121,12 +121,12 @@
 				<td>{{ submission.submit_id }}</td>
 			{% endif %}
 
-			<td><a href="{{ site_url('submissions/'~view~'/user/'~submission.username~(filter_problem?'/problem/'~filter_problem)) }}">{{ submission.username }}</a></td>
+			<td><a href="{{ site_url('submissions/'~view~'/user/'~submission.userid~(filter_problem?'/problem/'~filter_problem)) }}">{{ submission.username }}</a></td>
 			<td dir="auto">{{ submission.name }}</td>
 		{% endif %}
 			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem) }}" title="{{ problems[submission.problem].name }}">{{ submission.problem }}</a></td>
 			<td>{{ submission.time }}</td>
-			<td>{{ submission.pre_score }}</td>
+			<td>{{ submission.score }}</td>
 			<td>
 				<span class="tiny_text" {{ submission.delay > 0 ? 'style="color:red;"' }}'>
 				{% if submission.delay <= 0 %}
@@ -140,39 +140,25 @@
 			<td style="font-weight: bold;">{{ submission.final_score }} </td>
 			<td>{{ submission.language }}</td>
 			<td class="status">
-				{% if submission.status == 'Uploaded' %}
-					Uploaded
+				{% if submission.status == 'PENDING' %}
+					{% set submission_class = 'btn' %}
+				{% elseif submission.status == 'ACCEPTED' %}
+					{% set submission_class = 'btn shj-green' %}
+				{% elseif submission.status == 'REJECTED' %}
+					{% set submission_class = 'btn shj-red' %}
 				{% else %}
-					{% if submission.status|lower == 'pending' %}
-						{% set submission_class = 'btn' %}
-					{% elseif submission.status|lower == 'score' %}
-						{% set submission_class = (submission.fullmark ? 'btn shj-green' : 'btn shj-red') %}
-					{% else %}
-						{% set submission_class = 'btn shj-blue' %}
-					{% endif %}
-					<div class="{{ submission_class }}" data-type="result" >
-						{% if submission.status == 'SCORE' %}
-							{{ submission.final_score }}
-						{% else %}
-							{{ submission.status }}
-						{% endif %}
-					</div>
+					{% set submission_class = 'btn shj-blue' %}
 				{% endif %}
+				<div class="{{ submission_class }}" data-type="result" >
+					{{ submission.status }}
+				</div>
 			</td>
 			<td>
-				{% if submission.file_type == 'zip' or submission.file_type == 'pdf' %}
-					<div class="btn shj-orange" data-type="download">Download</div>
-				{% else %}
-					<div class="btn shj-orange" data-type="code" >Code</div>
-				{% endif %}
+				<div class="btn shj-orange" data-type="code" >Code</div>
 			</td>
 			{% if view == 'final' and user_level > 0 %}
 			<td>
-				{% if submission.status == 'Uploaded' %}
-					---
-				{% else %}
-					<div class="btn" data-type="log" >Log</div>
-				{% endif %}
+				<div class="btn" data-type="log" >Log</div>
 			</td>
 			{% endif %}
 			{% if user_level >= 2 %}

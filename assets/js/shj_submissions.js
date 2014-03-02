@@ -16,17 +16,13 @@ $(document).ready(function () {
 		var button = $(this);
 		var row = button.parents('tr');
 		var type = button.data('type');
-		if (type == 'download') {
-			window.location = shj.site_url + 'submissions/download_file/' + row.data('u') + '/' + row.data('a') + '/' + row.data('p') + '/' + row.data('s');
-			return;
-		}
 		var view_code_request = $.ajax({
 			cache: true,
 			type: 'POST',
 			url: shj.site_url + 'submissions/view_code',
 			data: {
 				type: type,
-				username: row.data('u'),
+				userid: row.data('u'),
 				assignment: row.data('a'),
 				problem: row.data('p'),
 				submit_id: row.data('s'),
@@ -68,7 +64,7 @@ $(document).ready(function () {
 			type: 'POST',
 			url: shj.site_url + 'rejudge/rejudge_single',
 			data: {
-				username: row.data('u'),
+				userid: row.data('u'),
 				assignment: row.data('a'),
 				problem: row.data('p'),
 				submit_id: row.data('s'),
@@ -92,14 +88,14 @@ $(document).ready(function () {
 			var row = $(this).parents('tr');
 			var submit_id = row.data('s');
 			var problem = row.data('p');
-			var username = row.data('u');
+			var userid = row.data('u');
 			$.ajax({
 				type: 'POST',
 				url: shj.site_url + 'submissions/select',
 				data: {
 					submit_id: submit_id,
 					problem: problem,
-					username: username,
+					userid: userid,
 					shj_csrf_token: shj.csrf_token
 				},
 				beforeSend: shj.loading_start,

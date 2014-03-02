@@ -29,54 +29,39 @@ class Scoreboard_model extends CI_Model
 		$assignment = $this->assignment_model->assignment_info($assignment_id);
 		$submissions = $this->db->get_where('submissions', array('is_final' => 1 , 'assignment' => $assignment_id))->result_array();
 		$total_score = array();
-		$penalty = array();
 		$users = array();
 		$start = strtotime($assignment['start_time']);
-		$submit_penalty = $this->settings_model->get_setting('submit_penalty');
 		$scores = array();
 		foreach ($submissions as $submission){
-
+			$submission['username'] = $this->user_model->user_id_to_username($submission['userid']);
 			$pi = $this->assignment_model->problem_info($assignment_id, $submission['problem']);
-
-			$pre_score = ceil($submission['pre_score']*$pi['score']/10000);
-			if ($submission['coefficient'] === 'error')
+			$score = ceil($submission['score']*$pi['score']/10000);
+			if ($submission['coefficient'] < 0)
 				$final_score = 0;
 			else
-				$final_score = ceil($pre_score*$submission['coefficient']/100);
+				$final_score = ceil($score*$submission['coefficient']/100);
 			$delay = strtotime($submission['time'])-$start;
 			$scores[$submission['username']][$submission['problem']]['score'] = $final_score;
 			$scores[$submission['username']][$submission['problem']]['time'] = $delay;
-
+			
 			if ( ! isset($total_score[$submission['username']]))
 				$total_score[$submission['username']] = 0;
-			if ( ! isset($penalty[$submission['username']]))
-				$penalty[$submission['username']] = 0;
 
 			$total_score[$submission['username']] += $final_score;
-
-			$number_of_submissions = $this->db->where(array(
-				'assignment' => $submission['assignment'],
-				'problem' => $submission['problem'],
-				'username' => $submission['username'],
-			))->count_all_results('submissions');
-
-			$penalty[$submission['username']] += $delay + $number_of_submissions*$submit_penalty;
-			$users[] = $submission['username'];
+			
+			array_push($users,$submission['username']);
 		}
 		$scoreboard = array(
 			'username' => array(),
-			'score' => array(),
-			'submit_penalty' => array()
+			'score' => array()
 		);
 		$users = array_unique($users);
 		foreach($users as $username){
 			array_push($scoreboard['username'], $username);
 			array_push($scoreboard['score'], $total_score[$username]);
-			array_push($scoreboard['submit_penalty'], $penalty[$username]);
 		}
 		array_multisort(
 			$scoreboard['score'], SORT_NUMERIC, SORT_DESC,
-			$scoreboard['submit_penalty'], SORT_NUMERIC, SORT_ASC,
 			$scoreboard['username']
 		);
 		return array($scores, $scoreboard);

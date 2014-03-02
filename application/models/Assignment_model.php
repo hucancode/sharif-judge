@@ -32,12 +32,9 @@ class Assignment_model extends CI_Model
 		// Start Database Transaction
 		$this->db->trans_start();
 
-		$extra_items = explode('*', $this->input->post('extra_time'));
-		$extra_time = 1;
-		foreach($extra_items as $extra_item)
-		{
-			$extra_time *= $extra_item;
-		}
+		$extra_time = $this->input->post('extra_time');
+		if(is_numeric($extra_time)) $extra_time=0;
+		
 		$assignment = array(
 			'id' => $id,
 			'name' => $this->input->post('assignment_name'),
@@ -75,47 +72,33 @@ class Assignment_model extends CI_Model
 		$c_tl = $this->input->post('c_time_limit');
 		$py_tl = $this->input->post('python_time_limit');
 		$java_tl = $this->input->post('java_time_limit');
+		$cs_tl = $this->input->post('cs_time_limit');
 		$ml = $this->input->post('memory_limit');
-		$ft = $this->input->post('languages');
+		$lang = $this->input->post('languages');
 		$dc = $this->input->post('diff_cmd');
 		$da = $this->input->post('diff_arg');
-		$uo = $this->input->post('is_upload_only');
-		if ($uo === NULL)
-			$uo = array();
 		for ($i=1; $i<=$this->input->post('number_of_problems'); $i++)
 		{
-			$items = explode(',', $ft[$i-1]);
-			$ft[$i-1] = '';
+			$items = explode(',', $lang[$i-1]);
+			$lang[$i-1] = '';
 			foreach ($items as $item){
-				$item = trim($item);
-				$item2 = strtolower($item);
-				$item = ucfirst($item2);
-				if ($item2 === 'python2')
-					$item = 'Python 2';
-				elseif ($item2 === 'python3')
-					$item = 'Python 3';
-				elseif ($item2 === 'pdf')
-					$item = 'PDF';
-				$item2 = strtolower($item);
-				if ( ! in_array($item2, array('c','c++','python 2','python 3','java','zip','pdf')))
+				$item = strtolower(trim($item));
+				if ( ! in_array($item, array('c','c++','python2','python3','java','c#')) )
 					continue;
-				// If the problem is not Upload-Only, its language should be one of {C,C++,Python 2, Python 3,Java}
-				if ( ! in_array($i, $uo) && ! in_array($item2, array('c','c++','python 2','python 3','java')) )
-					continue;
-				$ft[$i-1] .= $item.",";
+				$lang[$i-1] .= $item.",";
 			}
-			$ft[$i-1] = substr($ft[$i-1],0,strlen($ft[$i-1])-1); // remove last ','
+			$lang[$i-1] = substr($lang[$i-1],0,strlen($lang[$i-1])-1); // remove last ','
 			$problem = array(
 				'assignment' => $id,
 				'id' => $i,
 				'name' => $names[$i-1],
 				'score' => $scores[$i-1],
-				'is_upload_only' => in_array($i,$uo)?1:0,
 				'c_time_limit' => $c_tl[$i-1],
 				'python_time_limit' => $py_tl[$i-1],
 				'java_time_limit' => $java_tl[$i-1],
+				'cs_time_limit' => $cs_tl[$i-1],
 				'memory_limit' => $ml[$i-1],
-				'allowed_languages' => $ft[$i-1],
+				'allowed_languages' => $lang[$i-1],
 				'diff_cmd' => $dc[$i-1],
 				'diff_arg' => $da[$i-1],
 			);
@@ -135,12 +118,9 @@ class Assignment_model extends CI_Model
 		return $this->db->trans_status();
 	}
 
-
-
 	// ------------------------------------------------------------------------
-
-
-
+	
+	
 	/**
 	 * Delete An Assignment
 	 *
@@ -445,9 +425,9 @@ class Assignment_model extends CI_Model
 			$delay = strtotime($item['time'])-$finish_time;
 			ob_start();
 			if ( eval($new_late_rule) === FALSE )
-				$coefficient = "error";
+				$coefficient = -1;
 			if (!isset($coefficient))
-				$coefficient = "error";
+				$coefficient = -1;
 			ob_end_clean();
 			$submissions[$i]['coefficient'] = $coefficient;
 		}

@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Submissions extends CI_Controller
 {
-
+	private $userid;
 	private $username;
 	private $assignment;
 	private $problems;
@@ -29,6 +29,7 @@ class Submissions extends CI_Controller
 			redirect('login');
 		$this->load->model('submit_model');
 		$this->username = $this->session->userdata('username');
+		$this->userid = $this->user_model->username_to_user_id($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->user_level = $this->user_model->get_user_level($this->username);
 		$this->problems = $this->assignment_model->all_problems($this->assignment['id']);
@@ -36,9 +37,9 @@ class Submissions extends CI_Controller
 		$input = $this->uri->uri_to_assoc();
 		$this->filter_user = $this->filter_problem = NULL;
 		$this->page_number = 1;
-		if (array_key_exists('user', $input) && $input['user'])
-			if ($this->user_level > 0) // students are not able to filter submissions by user
-				$this->filter_user = $this->form_validation->alpha_numeric($input['user'])?$input['user']:NULL;
+		// students are not able to filter submissions by user
+		if (array_key_exists('user', $input) && $input['user'] && $this->user_level > 0)
+			$this->filter_user = is_numeric($input['user'])?$input['user']:NULL;
 		if (array_key_exists('problem', $input) && $input['problem'])
 			$this->filter_problem = is_numeric($input['problem'])?$input['problem']:NULL;
 		if (array_key_exists('page', $input) && $input['page'])
@@ -117,15 +118,20 @@ class Submissions extends CI_Controller
 
 		// Prepare data (in $rows array)
 		if ($view === 'final')
-			$items = $this->submit_model->get_final_submissions($this->assignment['id'], $this->user_level, $this->username, NULL, $this->filter_user, $this->filter_problem);
+			$items = $this->submit_model->get_final_submissions($this->assignment['id'], $this->user_level, $this->userid, NULL, $this->filter_user, $this->filter_problem);
 		else
-			$items = $this->submit_model->get_all_submissions($this->assignment['id'], $this->user_level, $this->username, NULL, $this->filter_user, $this->filter_problem);
+			$items = $this->submit_model->get_all_submissions($this->assignment['id'], $this->user_level, $this->userid, NULL, $this->filter_user, $this->filter_problem);
 
 		$names = $this->user_model->get_names();
 
 		$finish = strtotime($this->assignment['finish_time']);
 		$i=0; $j=0; $un='';
 		$rows = array();
+		foreach ($items as &$item)
+		{
+			$item['username'] = $this->user_model->user_id_to_username($item['userid']);
+			$item['name'] = $names[$item['username']];
+		}
 		foreach ($items as $item){
 			$i++;
 			if ($item['username'] != $un)
@@ -134,17 +140,17 @@ class Submissions extends CI_Controller
 
 			$pi = $this->problems[$item['problem']];
 
-			$pre_score = ceil($item['pre_score']*$pi['score']/10000);
+			$score = ceil($item['score']*$pi['score']/10000);
 
 			$checked='';
 			if ($item['is_final'])
 				$checked='*';
 
 			$delay = strtotime($item['time'])-$finish;
-			if ($item['coefficient'] === 'error')
+			if ($item['coefficient'] < 0)
 				$final_score = 0;
 			else
-				$final_score = ceil($pre_score*$item['coefficient']/100);
+				$final_score = ceil($score*$item['coefficient']/100);
 
 
 			if ($this->user_level === 0)
@@ -152,7 +158,7 @@ class Submissions extends CI_Controller
 					$checked,
 					$item['problem'].' ('.$pi['name'].')',
 					$item['time'],
-					$pre_score,
+					$score,
 					($delay<=0?'No Delay':time_hhmm($delay)),
 					$item['coefficient'],
 					$final_score,
@@ -164,10 +170,10 @@ class Submissions extends CI_Controller
 					$checked,
 					$item['submit_id'],
 					$item['username'],
-					$names[$item['username']],
+					$item['name'],
 					$item['problem'].' ('.$pi['name'].')',
 					$item['time'],
-					$pre_score,
+					$score,
 					($delay<=0?'No Delay':time_hhmm($delay)),
 					$item['coefficient'],
 					$final_score,
@@ -260,7 +266,6 @@ class Submissions extends CI_Controller
 
 	public function the_final()
 	{
-
 		if ( ! is_numeric($this->page_number))
 			show_404();
 
@@ -270,7 +275,7 @@ class Submissions extends CI_Controller
 		$config = array(
 			'base_url' => site_url('submissions/final'.($this->filter_user?'/user/'.$this->filter_user:'').($this->filter_problem?'/problem/'.$this->filter_problem:'')),
 			'cur_page' => $this->page_number,
-			'total_rows' => $this->submit_model->count_final_submissions($this->assignment['id'], $this->user_level, $this->username, $this->filter_user, $this->filter_problem),
+			'total_rows' => $this->submit_model->count_final_submissions($this->assignment['id'], $this->user_level, $this->userid, $this->filter_user, $this->filter_problem),
 			'per_page' => $this->settings_model->get_setting('results_per_page_final'),
 			'num_links' => 5,
 			'full_ul_class' => 'shj_pagination',
@@ -280,27 +285,28 @@ class Submissions extends CI_Controller
 			$config['per_page'] = $config['total_rows'];
 		$this->load->library('shj_pagination', $config);
 
-		$submissions = $this->submit_model->get_final_submissions($this->assignment['id'], $this->user_level, $this->username, $this->page_number, $this->filter_user, $this->filter_problem);
+		$submissions = $this->submit_model->get_final_submissions($this->assignment['id'], $this->user_level, $this->userid, $this->page_number, $this->filter_user, $this->filter_problem);
 
 		$names = $this->user_model->get_names();
 
 		foreach ($submissions as &$item)
 		{
+			$item['username'] = $this->user_model->user_id_to_username($item['userid']);
 			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
+			$item['score'] = ceil($item['score']*$this->problems[$item['problem']]['score']/10000);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
-			if ($item['coefficient'] === 'error')
+			if ($item['coefficient'] < 0)
 				$item['final_score'] = 0;
 			else
-				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
+				$item['final_score'] = ceil($item['score']*$item['coefficient']/100);
 		}
 
 
 		$data = array(
 			'view' => 'final',
 			'username' => $this->username,
+			'userid' => $this->userid,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -347,26 +353,27 @@ class Submissions extends CI_Controller
 			$config['per_page'] = $config['total_rows'];
 		$this->load->library('shj_pagination', $config);
 
-		$submissions = $this->submit_model->get_all_submissions($this->assignment['id'], $this->user_level, $this->username, $this->page_number, $this->filter_user, $this->filter_problem);
-
+		$submissions = $this->submit_model->get_all_submissions($this->assignment['id'], $this->user_level, $this->userid, $this->page_number, $this->filter_user, $this->filter_problem);
+		
 		$names = $this->user_model->get_names();
 
 		foreach ($submissions as &$item)
 		{
+			$item['username'] = $this->user_model->user_id_to_username($item['userid']);	
 			$item['name'] = $names[$item['username']];
-			$item['fullmark'] = ($item['pre_score'] == 10000);
-			$item['pre_score'] = ceil($item['pre_score']*$this->problems[$item['problem']]['score']/10000);
+			$item['score'] = ceil($item['score']*$this->problems[$item['problem']]['score']/10000);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
 			if ($item['coefficient'] === 'error')
 				$item['final_score'] = 0;
 			else
-				$item['final_score'] = ceil($item['pre_score']*$item['coefficient']/100);
+				$item['final_score'] = ceil($item['score']*$item['coefficient']/100);
 		}
 
 		$data = array(
 			'view' => 'all',
 			'username' => $this->username,
+			'userid' => $this->userid,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -412,16 +419,16 @@ class Submissions extends CI_Controller
 
 		$this->form_validation->set_rules('submit_id', 'Submit ID', 'integer|greater_than[0]');
 		$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
-		$this->form_validation->set_rules('username', 'Username', 'required|min_length[3]|max_length[20]|alpha_numeric');
+		$this->form_validation->set_rules('userid', 'UserID', 'integer|greater_than[0]');
 
 		if ($this->form_validation->run())
 		{
-			$username = $this->input->post('username');
+			$userid = $this->input->post('userid');
 			if ($this->user_level === 0)
-				$username = $this->username;
+				$userid = $this->userid;
 
 			$res = $this->submit_model->set_final_submission(
-				$username,
+				$userid,
 				$this->assignment['id'],
 				$this->input->post('problem'),
 				$this->input->post('submit_id')
@@ -462,7 +469,7 @@ class Submissions extends CI_Controller
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 		$this->form_validation->set_rules('type','type','callback__check_type');
-		$this->form_validation->set_rules('username','username','required|min_length[3]|max_length[20]|alpha_numeric');
+		$this->form_validation->set_rules('userid','userid','integer|greater_than[0]');
 		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[0]');
 		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');
@@ -470,11 +477,12 @@ class Submissions extends CI_Controller
 		if($this->form_validation->run())
 		{
 			$submission = $this->submit_model->get_submission(
-				$this->input->post('username'),
+				$this->input->post('userid'),
 				$this->input->post('assignment'),
 				$this->input->post('problem'),
 				$this->input->post('submit_id')
 			);
+			$submission['username'] = $this->user_model->user_id_to_username($submission['userid']);
 			if ($submission === FALSE)
 				show_404();
 
@@ -483,7 +491,7 @@ class Submissions extends CI_Controller
 			if ($this->user_level === 0 && $type === 'log')
 				show_404();
 
-			if ($this->user_level === 0 && $this->username != $submission['username'])
+			if ($this->user_level === 0 && $this->userid != $submission['username'])
 				exit('Don\'t try to see submitted codes :)');
 
 			if ($type === 'result')
@@ -513,44 +521,7 @@ class Submissions extends CI_Controller
 
 		}
 		else
-			exit('Are you trying to see other users\' codes? :)');
-	}
-
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-
-	public function download_file(){
-		$username = $this->uri->segment(3);
-		$assignment = $this->uri->segment(4);
-		$problem = $this->uri->segment(5);
-		$submit_id = $this->uri->segment(6);
-
-		$submission = $this->submit_model->get_submission(
-			$username,
-			$assignment,
-			$problem,
-			$submit_id
-		);
-		if ($submission === FALSE)
-			show_404();
-
-		if ($this->user_level === 0 && $this->username != $submission['username'])
-			exit('Don\'t try to see submitted codes :)');
-
-		$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
-		"/assignment_{$submission['assignment']}/p{$submission['problem']}/{$submission['username']}/{$submission['file_name']}.".filetype_to_extension($submission['file_type']);
-
-		$this->load->helper('download');
-		force_download(
-			"{$submission['file_name']}.".filetype_to_extension($submission['file_type']),
-			file_get_contents($file_path)
-		);
-
+			exit('I don\'t know what are you looking for!');
 	}
 
 

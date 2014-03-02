@@ -363,8 +363,48 @@ class User_model extends CI_Model
 
 		$this->db->where('username', $username)->update('users', array('last_login_time'=>$now));
 	}
+	
+	
+	// ------------------------------------------------------------------------
 
 
+	/**
+	 * User Email
+	 *
+	 * Returns user email by given username
+	 * @param $username
+	 * @return mixed
+	 */
+	public function user_email($username)
+	{
+		$query = $this->db->select('email')->get_where('users', array('username'=>$username));
+		if ($query->num_rows() != 1){//logout
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+		return $query->row()->email;
+	}
+	
+	// ------------------------------------------------------------------------
+
+
+	/**
+	 * Display Name
+	 *
+	 * Returns display name by given username
+	 * @param $username
+	 * @return mixed
+	 */
+	public function display_name($username)
+	{
+		$query = $this->db->select('display_name')->get_where('users', array('username'=>$username));
+		if ($query->num_rows() != 1){//logout
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+		if($query->row()->display_name == '') return $username;
+		else return $query->row()->display_name;
+	}
 	// ------------------------------------------------------------------------
 
 

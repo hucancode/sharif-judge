@@ -106,7 +106,7 @@ class __TwigTemplate_933e06005df8163f4593b69291a370c1244541cf5b09dc2d8305ba38368
 \t<tr>
 \t\t<th>#</th>
 \t\t<th>Submit ID</th>
-\t\t<th>Usename</th>
+\t\t<th>UserID</th>
 \t\t<th>Assignment</th>
 \t\t<th>Problem</th>
 \t\t<th>Type (judge/rejudge)</th>

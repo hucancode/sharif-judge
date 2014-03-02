@@ -11,6 +11,7 @@ class Submit extends CI_Controller
 
 	private $data; //data sent to view
 	private $username;
+	private $userid;
 	private $user_level;
 	private $assignment;
 	private $assignment_root;
@@ -33,6 +34,7 @@ class Submit extends CI_Controller
 			redirect('login');
 		$this->load->library('upload')->model('queue_model');
 		$this->username = $this->session->userdata('username');
+		$this->userid = $this->user_model->username_to_user_id($this->username);
 		$this->user_level = $this->user_model->get_user_level($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->assignment_root = $this->settings_model->get_setting('assignments_root');
@@ -61,11 +63,9 @@ class Submit extends CI_Controller
 			case 'c': return 'c';
 			case 'c++': return 'cpp';
 			case 'c#': return 'cs';
-			case 'python 2': return 'py2';
-			case 'python 3': return 'py3';
+			case 'python2': return 'py2';
+			case 'python3': return 'py3';
 			case 'java': return 'java';
-			case 'zip': return 'zip';
-			case 'pdf': return 'pdf';
 			default: return FALSE;
 		}
 	}
@@ -83,8 +83,6 @@ class Submit extends CI_Controller
 			case 'py2': return ($extension==='py'?TRUE:FALSE);
 			case 'py3': return ($extension==='py'?TRUE:FALSE);
 			case 'java': return ($extension==='java'?TRUE:FALSE);
-			case 'zip': return ($extension==='zip'?TRUE:FALSE);
-			case 'pdf': return ($extension==='pdf'?TRUE:FALSE);
 		}
 	}
 
@@ -96,7 +94,7 @@ class Submit extends CI_Controller
 	{
 		if ($str=='0')
 			return FALSE;
-		if (in_array( strtolower($str),array('c', 'c++', 'c#', 'python 2', 'python 3', 'java', 'zip', 'pdf')))
+		if (in_array( strtolower($str),array('c', 'c++', 'c#', 'python2', 'python3', 'java')))
 			return TRUE;
 		return FALSE;
 	}
@@ -222,24 +220,18 @@ class Submit extends CI_Controller
 			$submit_info = array(
 				'submit_id' => $this->assignment_model->increase_total_submits($this->assignment['id']),
 				'username' => $this->username,
+				'userid' => $this->userid,
 				'assignment' => $this->assignment['id'],
 				'problem' => $this->problem['id'],
 				'file_name' => $result['raw_name'],
 				'main_file_name' => $this->file_name,
 				'file_type' => $this->filetype,
 				'coefficient' => $this->coefficient,
-				'pre_score' => 0,
+				'score' => 0,
 				'time' => shj_now_str(),
 			);
-			if ($this->problem['is_upload_only'] == 0)
-			{
-				$this->queue_model->add_to_queue($submit_info);
+			$this->queue_model->add_to_queue($submit_info);
 				process_the_queue();
-			}
-			else
-			{
-				$this->submit_model->add_upload_only($submit_info);
-			}
 
 			return TRUE;
 		}
