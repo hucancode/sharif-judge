@@ -75,9 +75,6 @@
 			<a href="{{ site_url('assignments/download/'~item.id) }}"><i title="Download Final Codes" class="fa fa-download fa-lg color12"></i></a>
 		{% endif %}
 		{% if user_level >= 2 %}
-			<a href="{{ site_url('moss/'~item.id) }}"><i title="Detect Similar Codes" class="fa fa-shield fa-lg color7"></i></a>
-		{% endif %}
-		{% if user_level >= 2 %}
 			<a href="{{ site_url('assignments/edit/'~item.id) }}"><i title="Edit" class="fa fa-pencil fa-lg color3"></i></a>
 		{% endif %}
 		{% if user_level >= 2 %}

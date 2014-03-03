@@ -10,6 +10,7 @@ class Settings extends CI_Controller
 {
 
 	private $username;
+	private $email;
 	private $assignment;
 	private $user_level;
 	private $form_status;
@@ -26,6 +27,7 @@ class Settings extends CI_Controller
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
 		$this->username = $this->session->userdata('username');
+		$this->email = $this->user_model->user_email($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->user_level = $this->user_model->get_user_level($this->username);
 		if ( $this->user_level <= 2) // permission denied
@@ -44,6 +46,7 @@ class Settings extends CI_Controller
 		$data = array_merge($settings,
 			array(
 				'username' => $this->username,
+				'email' => $this->email,
 				'user_level' => $this->user_level,
 				'all_assignments' => $this->assignment_model->all_assignments(),
 				'assignment' => $this->assignment,
@@ -95,9 +98,9 @@ class Settings extends CI_Controller
 					array_push($this->errors, 'File shield_py3.py is not writable. Edit it manually.');
 			ob_end_clean();
 			$timezone = $this->input->post('timezone');
-			// if timezone is invalid, set it to 'Asia/Tehran' :
+			// if timezone is invalid, set it to 'Asia/Bangkok' :
 			if ( ! in_array($timezone, DateTimeZone::listIdentifiers()) )
-				$timezone='Asia/Tehran';
+				$timezone='Asia/Bangkok';
 
 			$this->settings_model->set_settings(
 				array(

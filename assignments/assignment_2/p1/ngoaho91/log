@@ -1,13 +1,13 @@
 cd /var/www/judge/tester;
-./tester.sh /var/www/judge/assignments/assignment_2/p1 'ngoaho91' 'hello' 'hello-11' cs 2 3 50000 1048576 diff -bB 1 1 0 0 1
+./tester.sh /var/www/judge/assignments/assignment_2/p1 'ngoaho91' 'hello-11' cs 2 3 50000 1048576 diff -bB 1 1 0 0 1
 Starting tester...
-Sun Mar  2 13:53:56 ICT 2014
+Mon Mar  3 20:11:13 ICT 2014
 Language: cs
 Time Limit: 2 s
 Memory Limit: 50000 kB
 Output size limit: 1048576 bytes
 Compiling as C#
-Compiled. Exit Code=0  Execution Time: 658 ms
+Compiled. Exit Code=0  Execution Time: 623 ms
 
 Testing...
 1 test cases found
@@ -19,4 +19,4 @@ ACCEPTED
 
 Score from 10000: 10000
 
-Total Execution Time: 815 ms
+Total Execution Time: 761 ms

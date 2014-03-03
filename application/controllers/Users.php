@@ -10,6 +10,7 @@ class Users extends CI_Controller
 {
 
 	private $username;
+	private $email;
 	private $assignment;
 	private $user_level;
 
@@ -24,6 +25,7 @@ class Users extends CI_Controller
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
 		$this->username = $this->session->userdata('username');
+		$this->email = $this->user_model->user_email($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->user_level = $this->user_model->get_user_level($this->username);
 		if ( $this->user_level <= 2) // permission denied
@@ -43,6 +45,7 @@ class Users extends CI_Controller
 
 		$data = array(
 			'username' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -64,6 +67,7 @@ class Users extends CI_Controller
 	{
 		$data = array(
 			'username' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,

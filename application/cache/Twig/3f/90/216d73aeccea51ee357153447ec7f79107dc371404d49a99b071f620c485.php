@@ -235,8 +235,8 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
                 // line 78
                 echo "\t\t\t<a href=\"";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
-                echo site_url(("moss/" . $this->getAttribute($_item_, "id")));
-                echo "\"><i title=\"Detect Similar Codes\" class=\"fa fa-shield fa-lg color7\"></i></a>
+                echo site_url(("assignments/edit/" . $this->getAttribute($_item_, "id")));
+                echo "\"><i title=\"Edit\" class=\"fa fa-pencil fa-lg color3\"></i></a>
 \t\t";
             }
             // line 80
@@ -246,22 +246,11 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
                 // line 81
                 echo "\t\t\t<a href=\"";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
-                echo site_url(("assignments/edit/" . $this->getAttribute($_item_, "id")));
-                echo "\"><i title=\"Edit\" class=\"fa fa-pencil fa-lg color3\"></i></a>
-\t\t";
-            }
-            // line 83
-            echo "\t\t";
-            if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
-            if (($_user_level_ >= 2)) {
-                // line 84
-                echo "\t\t\t<a href=\"";
-                if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
                 echo site_url(("assignments/delete/" . $this->getAttribute($_item_, "id")));
                 echo "\"><i title=\"Delete\" class=\"fa fa-times fa-lg color1\"></i></a>
 \t\t";
             }
-            // line 86
+            // line 83
             echo "\t</td>
 </tr>
 ";
@@ -269,7 +258,7 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['item'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 89
+        // line 86
         echo "</table>
 ";
     }
@@ -286,6 +275,6 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
 
     public function getDebugInfo()
     {
-        return array (  273 => 89,  265 => 86,  258 => 84,  254 => 83,  247 => 81,  243 => 80,  236 => 78,  232 => 77,  225 => 75,  221 => 74,  214 => 72,  211 => 71,  207 => 69,  203 => 67,  199 => 65,  196 => 64,  190 => 62,  185 => 61,  182 => 60,  175 => 58,  171 => 56,  168 => 55,  159 => 53,  148 => 52,  143 => 51,  134 => 50,  131 => 49,  126 => 48,  109 => 33,  105 => 31,  102 => 30,  99 => 29,  89 => 27,  84 => 26,  74 => 24,  69 => 23,  66 => 22,  58 => 16,  55 => 15,  52 => 14,  46 => 10,  40 => 9,  34 => 8,  29 => 6,);
+        return array (  262 => 86,  254 => 83,  247 => 81,  243 => 80,  236 => 78,  232 => 77,  225 => 75,  221 => 74,  214 => 72,  211 => 71,  207 => 69,  203 => 67,  199 => 65,  196 => 64,  190 => 62,  185 => 61,  182 => 60,  175 => 58,  171 => 56,  168 => 55,  159 => 53,  148 => 52,  143 => 51,  134 => 50,  131 => 49,  126 => 48,  109 => 33,  105 => 31,  102 => 30,  99 => 29,  89 => 27,  84 => 26,  74 => 24,  69 => 23,  66 => 22,  58 => 16,  55 => 15,  52 => 14,  46 => 10,  40 => 9,  34 => 8,  29 => 6,);
     }
 }

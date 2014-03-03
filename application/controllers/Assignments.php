@@ -10,6 +10,7 @@ class Assignments extends CI_Controller
 {
 
 	private $username;
+	private $email;
 	private $assignment;
 	private $user_level;
 
@@ -30,6 +31,7 @@ class Assignments extends CI_Controller
 			redirect('login');
 
 		$this->username = $this->session->userdata('username');
+		$this->email = $this->user_model->user_email($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->user_level = $this->user_model->get_user_level($this->username);
 
@@ -47,6 +49,7 @@ class Assignments extends CI_Controller
 	{
 		$data = array(
 			'username' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -60,9 +63,9 @@ class Assignments extends CI_Controller
 			$delay = shj_now()-strtotime($item['finish_time']);;
 			ob_start();
 			if ( eval($item['late_rule']) === FALSE )
-				$coefficient = "error";
+				$coefficient = -1;
 			if (!isset($coefficient))
-				$coefficient = "error";
+				$coefficient = -1;
 			ob_end_clean();
 			$item['coefficient'] = $coefficient;
 			$item['delay'] = $delay;
@@ -252,6 +255,7 @@ class Assignments extends CI_Controller
 
 		$data = array(
 			'username' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -283,10 +287,9 @@ class Assignments extends CI_Controller
 						'java_time_limit' => 2000,
 						'cs_time_limit' => 2000,
 						'memory_limit' => 50000,
-						'allowed_languages' => 'C,C++,Python 2,Python 3,Java,C#',
+						'allowed_languages' => 'c,c++,python2,python3,java,c#',
 						'diff_cmd' => 'diff',
-						'diff_arg' => '-bB',
-						'is_upload_only' => 0
+						'diff_arg' => '-bB'
 					)
 				);
 			else
@@ -302,7 +305,6 @@ class Assignments extends CI_Controller
 				$dc = $this->input->post('diff_cmd');
 				$da = $this->input->post('diff_arg');
 				$data['problems'] = array();
-				$uo = $this->input->post('is_upload_only');
 				if ($uo === NULL)
 					$uo = array();
 				for ($i=0; $i<count($names); $i++){
@@ -317,8 +319,7 @@ class Assignments extends CI_Controller
 						'memory_limit' => $ml[$i],
 						'allowed_languages' => $ft[$i],
 						'diff_cmd' => $dc[$i],
-						'diff_arg' => $da[$i],
-						'is_upload_only' => in_array($i+1,$uo)?1:0,
+						'diff_arg' => $da[$i]
 					));
 				}
 			}
@@ -372,32 +373,8 @@ class Assignments extends CI_Controller
 		$this->upload->initialize($config);
 
 		$assignment_dir = $config['upload_path']."/assignment_{$the_id}";
-
-
-		// If all problems are Upload-Only, we do not need a zip file
-		if ( ! $this->edit && count($this->input->post('is_upload_only')) == $this->input->post('number_of_problems'))
-		{
-			if ( ! file_exists($assignment_dir))
-				mkdir($assignment_dir, 0700);
-
-			// Remove previous test cases and description
-			shell_exec("cd $assignment_dir; rm -rf */in; rm -rf */out; rm -f */tester.cpp; rm -f */tester.executable; rm -f */desc.html; rm -f */desc.md;");
-
-			for ($i=1; $i <= $this->input->post('number_of_problems'); $i++)
-				if ( ! file_exists("$assignment_dir/p$i"))
-					mkdir("$assignment_dir/p$i", 0700);
-
-			if($this->assignment_model->add_assignment($the_id, $this->edit)){
-				$this->success_messages[] = 'Assignment '.($this->edit?'updated':'added').' successfully.';
-				return TRUE;
-			}
-			else{
-				$this->error_messages[] = 'Error '.($this->edit?'updating':'adding').' assignment.';
-				return FALSE;
-			}
-		}
-
-		elseif ($this->upload->do_upload('tests_desc'))
+		
+		if ($this->upload->do_upload('tests_desc'))
 		{
 			$this->load->library('unzip');
 			$this->unzip->allow(array('txt', 'cpp', 'html', 'md'));

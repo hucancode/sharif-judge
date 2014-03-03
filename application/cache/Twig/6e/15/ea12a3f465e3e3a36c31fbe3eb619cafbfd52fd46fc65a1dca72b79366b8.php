@@ -149,11 +149,11 @@ class __TwigTemplate_6e15ea12a3f465e3e3a36c31fbe3eb619cafbfd52fd46fc65a1dca72b79
             if (isset($context["upload_state"])) { $_upload_state_ = $context["upload_state"]; } else { $_upload_state_ = null; }
             if (($_upload_state_ == "error")) {
                 // line 62
-                echo "\t\t<div class=\"shj_error\">Error uploading file.</div>
+                echo "\t\t<div class=\"shj_error\">Error submiting solution.</div>
 \t\t";
             } elseif (($_upload_state_ == "ok")) {
                 // line 64
-                echo "\t\t<div class=\"shj_ok\">File uploaded successfully. See the result in 'All Submissions'.</div>
+                echo "\t\t<div class=\"shj_ok\">Solution submitted successfully. See the result in 'All Submissions'.</div>
 \t\t";
             }
             // line 66

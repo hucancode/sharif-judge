@@ -20,13 +20,11 @@ class Submit_model extends CI_Model {
 	/**
 	 * Returns table row for a specific submission
 	 */
-	public function get_submission($userid, $assignment, $problem, $submit_id)
+	public function get_submission($assignment, $submit_id)
 	{
 		$query = $this->db->get_where('submissions',
 			array(
-				'userid'=>$userid,
 				'assignment'=>$assignment,
-				'problem'=>$problem,
 				'submit_id'=>$submit_id
 			)
 		);
@@ -124,21 +122,20 @@ class Submit_model extends CI_Model {
 	// ------------------------------------------------------------------------
 
 
-	public function set_final_submission($username, $assignment, $problem, $submit_id)
+	public function set_final_submission($userid, $assignment, $problem, $submit_id)
 	{
-
 		$this->db->where(array(
 			'is_final' => 1,
 			'userid' => $userid,
-			'assignment' => $assignment,
 			'problem' => $problem,
+			'assignment' => $assignment
 		))->update('submissions', array('is_final'=>0));
 
 		$this->db->where(array(
 			'userid' => $userid,
 			'assignment' => $assignment,
 			'problem' => $problem,
-			'submit_id' => $submit_id,
+			'submit_id' => $submit_id
 		))->update('submissions', array('is_final'=>1));
 
 		return TRUE;

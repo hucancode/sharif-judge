@@ -107,7 +107,7 @@
 			{% set j = j+1 %}
 		{% endif %}
 		{% set un = submission.username %}
-		<tr data-u="{{ submission.userid }}" data-a="{{ submission.assignment }}" data-p="{{ submission.problem }}" data-s="{{ submission.submit_id }}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
+		<tr data-u="{{ submission.userid }}" data-p="{{ submission.problem }}" data-s="{{ submission.submit_id }}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
 		{% if view == 'all' %}
 			<td>
 				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>

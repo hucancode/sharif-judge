@@ -42,12 +42,10 @@ class Assignment_model extends CI_Model
 			'total_submits' => 0,
 			'open' => ($this->input->post('open')===NULL?0:1),
 			'scoreboard' => ($this->input->post('scoreboard')===NULL?0:1),
-			'description' => '', /* todo */
 			'start_time' => date('Y-m-d H:i:s', strtotime($this->input->post('start_time'))),
 			'finish_time' => date('Y-m-d H:i:s', strtotime($this->input->post('finish_time'))),
 			'extra_time' => $extra_time*60,
-			'late_rule' => $this->input->post('late_rule'),
-			'participants' => $this->input->post('participants')
+			'late_rule' => $this->input->post('late_rule')
 		);
 		if($edit)
 		{
@@ -262,38 +260,10 @@ class Assignment_model extends CI_Model
 				'extra_time' => 0,
 				'problems' => 0
 			);
-		return $query->row_array();
+		$ret = $query->row_array();
+		$ret['practice_mode'] = $ret['finish_time'] == NULL;
+		return $ret;
 	}
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Is Participant
-	 *
-	 * Returns TRUE if $username if one of the $participants
-	 * Examples for participants: "ALL" or "user1, user2,user3"
-	 *
-	 * @param $participants
-	 * @param $username
-	 * @return bool
-	 */
-	public function is_participant($participants, $username)
-	{
-		$participants = explode(',', $participants);
-		foreach ($participants as &$participant){
-			$participant = trim($participant);
-		}
-		if(in_array('ALL', $participants))
-			return TRUE;
-		if(in_array($username, $participants))
-			return TRUE;
-		return FALSE;
-	}
-
 
 
 	// ------------------------------------------------------------------------
@@ -317,46 +287,6 @@ class Assignment_model extends CI_Model
 
 		// Return new total
 		return ($total+1);
-	}
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Set Moss Time
-	 *
-	 * Updates "Moss Update Time" for given assignment
-	 *
-	 * @param $assignment_id
-	 */
-	public function set_moss_time($assignment_id)
-	{
-		$now = shj_now_str();
-		$this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
-	}
-
-
-
-	// ------------------------------------------------------------------------
-
-
-
-	/**
-	 * Get Moss Time
-	 *
-	 * Returns "Moss Update Time" for given assignment
-	 *
-	 * @param $assignment_id
-	 * @return string
-	 */
-	public function get_moss_time($assignment_id)
-	{
-		$query = $this->db->select('moss_update')->get_where('assignments', array('id'=>$assignment_id));
-		if($query->num_rows() != 1) return 'Never';
-		return $query->row()->moss_update;
 	}
 
 

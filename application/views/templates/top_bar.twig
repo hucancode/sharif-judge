@@ -7,7 +7,7 @@
 	<div class="top_object shj_menu" id="user_top">
 		<a href="{{ site_url('profile') }}" id="profile_link"><i class="fa fa-user"></i></a>
 		<div class="top_menu user-menu">
-			<div class="gravatar"><img src="http://www.gravatar.com/avatar/{{ md5(email) }}?s=70&d=identicon" /></div>
+			<div class="gravatar"><img alt="Change your avatar at http://www.gravatar.com/" src="http://www.gravatar.com/avatar/{{ md5(email) }}?s=70&d=identicon" /></div>
 			<div class="name"><i class="fa fa-user"></i> {{ username }}</div>
 			<div class="menu-controls">
 				<a href="{{ site_url('logout') }}" class="logout-btn"><i class="fa fa-sign-out"></i> Sign Out</a>
@@ -16,6 +16,17 @@
 		</div>
 	</div>
 	<div class="top_object countdown" id="countdown">
+		{%  if assignment.practice_mode == true %}
+		<div class="time_block">
+			<span class="countdown_num">PRACTICE MODE</span><br>
+			<span class="time_label">no score and time limit</span>
+		</div>
+		<script >
+			$(document).ready(function () {
+				clearInterval(update_clock);
+			});
+		</script>
+		{% else %}
 		<div class="time_block">
 			<span id="time_days" class="countdown_num"></span><br>
 			<span class="time_label" id="days_label"></span>
@@ -32,6 +43,7 @@
 			<span id="time_seconds" class="countdown_num"></span><br>
 			<span class="time_label" id="seconds_label"></span>
 		</div>
+		{% endif %}
 	</div>
 	<div class="top_object countdown" id="extra_time">
 		<i class="fa fa-plus-square fa-2x"></i>
@@ -51,7 +63,6 @@
 		<ul class="top_menu">
 			<li><a href="{{ site_url('rejudge') }}">Rejudge</a></li>
 			<li><a href="{{ site_url('queue') }}">Submission Queue</a></li>
-			<li><a href="{{ site_url('moss/'~assignment['id']) }}">Cheat Detection</a></li>
 		</ul>
 	</div>
 	{% endif %}

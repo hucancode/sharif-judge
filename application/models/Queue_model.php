@@ -58,12 +58,19 @@ class Queue_model extends CI_Model
 
 	public function add_to_queue($submit_info)
 	{
-
-		$submit_info['is_final'] = 0;
-		$submit_info['status'] = 'PENDING';
-
-		$this->db->insert('submissions', $submit_info);
-
+		$this->db->insert('submissions', array(
+			'submit_id' => $submit_info['submit_id'],
+			'userid' => $submit_info['userid'],
+			'assignment' => $submit_info['assignment'],
+			'problem' => $submit_info['problem'],
+			'is_final' => 0,
+			'time' => shj_now_str(),
+			'status' => 'PENDING',
+			'score' => 0,
+			'file_name' => $submit_info['file_name'],
+			'file_type' => $submit_info['file_type'],
+			'coefficient' => $submit_info['coefficient']
+		));
 		$this->db->insert('queue', array(
 			'submit_id' => $submit_info['submit_id'],
 			'username' => $submit_info['username'],

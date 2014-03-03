@@ -22,9 +22,6 @@ $(document).ready(function () {
 			url: shj.site_url + 'submissions/view_code',
 			data: {
 				type: type,
-				userid: row.data('u'),
-				assignment: row.data('a'),
-				problem: row.data('p'),
 				submit_id: row.data('s'),
 				shj_csrf_token: shj.csrf_token
 			},
@@ -65,7 +62,6 @@ $(document).ready(function () {
 			url: shj.site_url + 'rejudge/rejudge_single',
 			data: {
 				userid: row.data('u'),
-				assignment: row.data('a'),
 				problem: row.data('p'),
 				submit_id: row.data('s'),
 				shj_csrf_token: shj.csrf_token
@@ -103,8 +99,8 @@ $(document).ready(function () {
 				error: shj.loading_error,
 				success: function (response) {
 					if (response.done) {
-						$("tr[data-u='" + username + "'][data-p='" + problem + "'] i.set_final").removeClass('fa-check-circle-o color11').addClass('fa-circle-o');
-						$("tr[data-u='" + username + "'][data-p='" + problem + "'][data-s='" + submit_id + "'] i.set_final").removeClass('fa-circle-o').addClass('fa-check-circle-o color11');
+						$("tr[data-u='" + userid + "'][data-p='" + problem + "'] i.set_final").removeClass('fa-check-circle-o color11').addClass('fa-circle-o');
+						$("tr[data-u='" + userid + "'][data-p='" + problem + "'][data-s='" + submit_id + "'] i.set_final").removeClass('fa-circle-o').addClass('fa-check-circle-o color11');
 					}
 					else
 						shj.loading_failed(response.message);

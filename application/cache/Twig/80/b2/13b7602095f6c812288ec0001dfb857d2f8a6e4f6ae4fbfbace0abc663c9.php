@@ -149,70 +149,64 @@ class __TwigTemplate_80b213b7602095f6c812288ec0001dfb857d2f8a6e4f6ae4fbfbace0abc
 \t\t\t\t<th rowspan=\"2\">#</th>
 \t\t\t\t<th rowspan=\"2\">Problem</th>
 \t\t\t\t<th rowspan=\"2\">Score</th>
-\t\t\t\t<th rowspan=\"2\">Upload<br>Only</th>
 \t\t\t</tr>
 \t\t\t</thead>
 \t\t\t";
-        // line 68
+        // line 67
         if (isset($context["all_problems"])) { $_all_problems_ = $context["all_problems"]; } else { $_all_problems_ = null; }
         $context['_parent'] = (array) $context;
         $context['_seq'] = twig_ensure_traversable($_all_problems_);
-        foreach ($context['_seq'] as $context["_key"] => $context["one_problem"]) {
-            // line 69
+        foreach ($context['_seq'] as $context["_key"] => $context["problem"]) {
+            // line 68
             echo "\t\t\t\t<tr";
             if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
             if (isset($context["one_problem"])) { $_one_problem_ = $context["one_problem"]; } else { $_one_problem_ = null; }
             echo ((($this->getAttribute($_problem_, "id") == $this->getAttribute($_one_problem_, "id"))) ? (" class=\"hl\"") : (""));
             echo ">
 \t\t\t\t\t<td>";
-            // line 70
-            if (isset($context["one_problem"])) { $_one_problem_ = $context["one_problem"]; } else { $_one_problem_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_one_problem_, "id"), "html", null, true);
+            // line 69
+            if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
+            echo twig_escape_filter($this->env, $this->getAttribute($_problem_, "id"), "html", null, true);
             echo "</td>
 \t\t\t\t\t<td>
 \t\t\t\t\t\t<a dir=\"auto\" href=\"";
-            // line 72
+            // line 71
             if (isset($context["description_assignment"])) { $_description_assignment_ = $context["description_assignment"]; } else { $_description_assignment_ = null; }
-            if (isset($context["one_problem"])) { $_one_problem_ = $context["one_problem"]; } else { $_one_problem_ = null; }
-            echo site_url(((("problems/" . $this->getAttribute($_description_assignment_, "id")) . "/") . $this->getAttribute($_one_problem_, "id")));
+            if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
+            echo site_url(((("problems/" . $this->getAttribute($_description_assignment_, "id")) . "/") . $this->getAttribute($_problem_, "id")));
             echo "\">";
-            if (isset($context["one_problem"])) { $_one_problem_ = $context["one_problem"]; } else { $_one_problem_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_one_problem_, "name"), "html", null, true);
+            if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
+            echo twig_escape_filter($this->env, $this->getAttribute($_problem_, "name"), "html", null, true);
             echo "</a>
 \t\t\t\t\t</td>
 \t\t\t\t\t<td>";
-            // line 74
-            if (isset($context["one_problem"])) { $_one_problem_ = $context["one_problem"]; } else { $_one_problem_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_one_problem_, "score"), "html", null, true);
-            echo "</td>
-\t\t\t\t\t<td>";
-            // line 75
-            if (isset($context["one_problem"])) { $_one_problem_ = $context["one_problem"]; } else { $_one_problem_ = null; }
-            echo (($this->getAttribute($_one_problem_, "is_upload_only")) ? ("Yes") : ("No"));
+            // line 73
+            if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
+            echo twig_escape_filter($this->env, $this->getAttribute($_problem_, "score"), "html", null, true);
             echo "</td>
 \t\t\t\t</tr>
 \t\t\t";
         }
         $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['one_problem'], $context['_parent'], $context['loop']);
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['problem'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 78
+        // line 76
         echo "\t\t</table>
 \t</div>
 
 \t";
-        // line 81
+        // line 79
         if (isset($context["finished"])) { $_finished_ = $context["finished"]; } else { $_finished_ = null; }
         if ((!$_finished_)) {
-            // line 82
+            // line 80
             echo "\t<div class=\"problems_widget\">
 \t\t<p><i class=\"fa fa-upload fa-lg color11\"></i> Submit</p>
 \t\t";
-            // line 84
+            // line 82
             echo form_open_multipart("submit");
             echo "
 \t\t<input type=\"hidden\" name=\"problem\" value=\"";
-            // line 85
+            // line 83
             if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
             echo twig_escape_filter($this->env, $this->getAttribute($_problem_, "id"), "html", null, true);
             echo "\"/>
@@ -221,12 +215,12 @@ class __TwigTemplate_80b213b7602095f6c812288ec0001dfb857d2f8a6e4f6ae4fbfbace0abc
 \t\t\t<select id=\"languages\" name=\"language\" class=\"sharif_input full-width\">
 \t\t\t\t<option value=\"0\" selected=\"selected\">-- Select Language --</option>
 \t\t\t\t";
-            // line 90
+            // line 88
             if (isset($context["problem"])) { $_problem_ = $context["problem"]; } else { $_problem_ = null; }
             $context['_parent'] = (array) $context;
             $context['_seq'] = twig_ensure_traversable($this->getAttribute($_problem_, "allowed_languages"));
             foreach ($context['_seq'] as $context["_key"] => $context["l"]) {
-                // line 91
+                // line 89
                 echo "\t\t\t\t\t<option value=\"";
                 if (isset($context["l"])) { $_l_ = $context["l"]; } else { $_l_ = null; }
                 echo twig_escape_filter($this->env, $_l_, "html", null, true);
@@ -239,7 +233,7 @@ class __TwigTemplate_80b213b7602095f6c812288ec0001dfb857d2f8a6e4f6ae4fbfbace0abc
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['l'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 93
+            // line 91
             echo "\t\t\t</select>
 \t\t</p>
 \t\t<p class=\"input_p\">
@@ -252,7 +246,7 @@ class __TwigTemplate_80b213b7602095f6c812288ec0001dfb857d2f8a6e4f6ae4fbfbace0abc
 \t</div>
 \t";
         }
-        // line 104
+        // line 102
         echo "
 </div>
 ";
@@ -270,6 +264,6 @@ class __TwigTemplate_80b213b7602095f6c812288ec0001dfb857d2f8a6e4f6ae4fbfbace0abc
 
     public function getDebugInfo()
     {
-        return array (  256 => 104,  243 => 93,  230 => 91,  225 => 90,  216 => 85,  212 => 84,  208 => 82,  205 => 81,  200 => 78,  190 => 75,  185 => 74,  175 => 72,  169 => 70,  162 => 69,  157 => 68,  145 => 58,  141 => 56,  138 => 55,  132 => 53,  122 => 47,  119 => 46,  116 => 45,  107 => 39,  101 => 38,  94 => 37,  91 => 36,  88 => 35,  69 => 17,  65 => 16,  60 => 15,  57 => 14,  49 => 10,  41 => 9,  35 => 8,  30 => 6,);
+        return array (  250 => 102,  237 => 91,  224 => 89,  219 => 88,  210 => 83,  206 => 82,  202 => 80,  199 => 79,  194 => 76,  184 => 73,  174 => 71,  168 => 69,  161 => 68,  156 => 67,  145 => 58,  141 => 56,  138 => 55,  132 => 53,  122 => 47,  119 => 46,  116 => 45,  107 => 39,  101 => 38,  94 => 37,  91 => 36,  88 => 35,  69 => 17,  65 => 16,  60 => 15,  57 => 14,  49 => 10,  41 => 9,  35 => 8,  30 => 6,);
     }
 }

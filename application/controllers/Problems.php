@@ -27,7 +27,7 @@ class Problems extends CI_Controller
 			redirect('login');
 
 		$this->username = $this->session->userdata('username');
-		$this->email = $this->user_model->
+		$this->email = $this->user_model->user_email($this->username);
 		$this->all_assignments = $this->assignment_model->all_assignments();
 		$selected_assignment = $this->user_model->selected_assignment($this->username);
 		if ($selected_assignment != 0)
@@ -53,10 +53,9 @@ class Problems extends CI_Controller
 			$assignment_id = $this->assignment['id'];
 		if ($assignment_id == 0)
 			show_error('No assignment selected.');
-			
 		$data = array(
 			'username' => $this->username,
-			'email' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->all_assignments,
 			'all_problems' => $this->assignment_model->all_problems($assignment_id),
@@ -79,7 +78,7 @@ class Problems extends CI_Controller
 		if (file_exists($path))
 			$data['problem']['description'] = file_get_contents($path);
 
-		if (shj_now() > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time']) // deadline = finish_time + extra_time
+		if ( ! $assignment['practice_mode'] && shj_now() > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time']) // deadline = finish_time + extra_time
 			$data['finished'] = TRUE;
 
 		$this->twig->display('pages/problems.twig', $data);
@@ -124,6 +123,7 @@ class Problems extends CI_Controller
 
 		$data = array(
 			'username' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,

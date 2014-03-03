@@ -10,6 +10,7 @@ class Submissions extends CI_Controller
 {
 	private $userid;
 	private $username;
+	private $email;
 	private $assignment;
 	private $problems;
 	private $user_level;
@@ -30,6 +31,7 @@ class Submissions extends CI_Controller
 		$this->load->model('submit_model');
 		$this->username = $this->session->userdata('username');
 		$this->userid = $this->user_model->username_to_user_id($this->username);
+		$this->email = $this->user_model->user_email($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->user_level = $this->user_model->get_user_level($this->username);
 		$this->problems = $this->assignment_model->all_problems($this->assignment['id']);
@@ -306,6 +308,7 @@ class Submissions extends CI_Controller
 		$data = array(
 			'view' => 'final',
 			'username' => $this->username,
+			'email' => $this->email,
 			'userid' => $this->userid,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
@@ -359,12 +362,12 @@ class Submissions extends CI_Controller
 
 		foreach ($submissions as &$item)
 		{
-			$item['username'] = $this->user_model->user_id_to_username($item['userid']);	
+			$item['username'] = $this->user_model->user_id_to_username($item['userid']);
 			$item['name'] = $names[$item['username']];
 			$item['score'] = ceil($item['score']*$this->problems[$item['problem']]['score']/10000);
 			$item['delay'] = strtotime($item['time'])-strtotime($this->assignment['finish_time']);
 			$item['language'] = filetype_to_language($item['file_type']);
-			if ($item['coefficient'] === 'error')
+			if ($item['coefficient'] === -1)
 				$item['final_score'] = 0;
 			else
 				$item['final_score'] = ceil($item['score']*$item['coefficient']/100);
@@ -374,6 +377,7 @@ class Submissions extends CI_Controller
 			'view' => 'all',
 			'username' => $this->username,
 			'userid' => $this->userid,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -417,24 +421,23 @@ class Submissions extends CI_Controller
 				return;
 			}
 
-		$this->form_validation->set_rules('submit_id', 'Submit ID', 'integer|greater_than[0]');
-		$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
-		$this->form_validation->set_rules('userid', 'UserID', 'integer|greater_than[0]');
+			$this->form_validation->set_rules('submit_id', 'submit_id', 'integer|greater_than[0]');
+			$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
+			$this->form_validation->set_rules('userid', 'userid', 'integer|greater_than[0]');
 
 		if ($this->form_validation->run())
 		{
 			$userid = $this->input->post('userid');
 			if ($this->user_level === 0)
 				$userid = $this->userid;
-
-			$res = $this->submit_model->set_final_submission(
+			$ret = $this->submit_model->set_final_submission(
 				$userid,
 				$this->assignment['id'],
 				$this->input->post('problem'),
 				$this->input->post('submit_id')
 			);
 
-			if ($res) {
+			if ($ret) {
 				// each time a user changes final submission, we should update scoreboard of that assignment
 				$this->load->model('scoreboard_model');
 				$this->scoreboard_model->update_scoreboard($this->assignment['id']);
@@ -469,30 +472,25 @@ class Submissions extends CI_Controller
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 		$this->form_validation->set_rules('type','type','callback__check_type');
-		$this->form_validation->set_rules('userid','userid','integer|greater_than[0]');
-		$this->form_validation->set_rules('assignment','assignment','integer|greater_than[0]');
-		$this->form_validation->set_rules('problem','problem','integer|greater_than[0]');
 		$this->form_validation->set_rules('submit_id','submit_id','integer|greater_than[0]');
 
 		if($this->form_validation->run())
 		{
 			$submission = $this->submit_model->get_submission(
-				$this->input->post('userid'),
-				$this->input->post('assignment'),
-				$this->input->post('problem'),
+				$this->assignment['id'],
 				$this->input->post('submit_id')
 			);
-			$submission['username'] = $this->user_model->user_id_to_username($submission['userid']);
 			if ($submission === FALSE)
 				show_404();
-
+				
+			$submission['username'] = $this->user_model->user_id_to_username($submission['userid']);
 			$type = $this->input->post('type'); // $type is 'code', 'result', or 'log'
 
 			if ($this->user_level === 0 && $type === 'log')
 				show_404();
 
-			if ($this->user_level === 0 && $this->userid != $submission['username'])
-				exit('Don\'t try to see submitted codes :)');
+			if ($this->user_level === 0 && $this->userid != $submission['userid'])
+				exit('Don\'t try to see other\'s submitted codes :)');
 
 			if ($type === 'result')
 				$file_path = rtrim($this->settings_model->get_setting('assignments_root'),'/').
@@ -507,7 +505,7 @@ class Submissions extends CI_Controller
 				$file_path = '/nowhere'; // This line is never reached!
 
 			$result = array(
-				'file_name' => $submission['main_file_name'].'.'.filetype_to_extension($submission['file_type']),
+				'file_name' => $submission['file_name'].'.'.filetype_to_extension($submission['file_type']),
 				'text' => file_exists($file_path)?file_get_contents($file_path):'File Not Found'
 			);
 

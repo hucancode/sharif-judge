@@ -1,15 +1,12 @@
 #!/bin/bash
 
 # This file runs a command with given limits
-# usage: ./runcode.sh extension memorylimit timelimit timelimit_int input_file command
+# usage: ./runcode.sh extension memorylimit timelimit_int input_file command
 
 EXT=$1
 shift
 
 MEMLIMIT=$1
-shift
-
-TIMELIMIT=$1
 shift
 
 TIMELIMITINT=$1
@@ -54,7 +51,7 @@ fi
 # e.g. In Ubuntu (Apache running under www-data), run visudo and add this line:
 # www-data ALL=(another_user) NOPASSWD: ALL
 EC=$?
-echo -e "sudo -u ha timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err" >>/home/hu/Desktop/log
+# echo -e "sudo -u ha timeout -s9 $((TIMELIMITINT*2)) $CMD <$IN >out 2>err" >>/home/hu/Desktop/log
 # KILL all processes of another_user (A process may still be alive!)
 # If you are running codes as another_user, also uncomment this line:
 sudo -u ha pkill -9 -u ha

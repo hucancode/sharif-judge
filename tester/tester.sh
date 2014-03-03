@@ -44,50 +44,48 @@ START=$(($(date +%s%N)/1000000));
 PROBLEMPATH=${1}
 # username
 UN=${2}
-# main file name (used only for java)
-MAINFILENAME=${3}
 # file name without extension
-FILENAME=${4}
+FILENAME=${3}
 # file extension
-EXT=${5}
+EXT=${4}
 # time limit in seconds
-TIMELIMIT=${6}
+TIMELIMIT=${5}
 # integer time limit in seconds (should be an integer greater than TIMELIMIT)
-TIMELIMITINT=${7}
+TIMELIMITINT=${6}
 # memory limit in kB
-MEMLIMIT=${8}
+MEMLIMIT=${7}
 # output size limit in Bytes
-OUTLIMIT=${9}
+OUTLIMIT=${8}
 # diff tool (default: diff)
-DIFFTOOL=${10}
+DIFFTOOL=${9}
 # diff options (default: -bB)
-DIFFOPTION=${11}
+DIFFOPTION=${10}
 # enable/disable judge log
-if [ ${12} = "1" ]; then
+if [ ${11} = "1" ]; then
 	LOG_ON=true
 else
 	LOG_ON=false
 fi
 # enable/disable easysandbox
-if [ ${13} = "1" ]; then
+if [ ${12} = "1" ]; then
 	SANDBOX_ON=true
 else
 	SANDBOX_ON=false
 fi
 # enable/disable C/C++ shield
-if [ ${14} = "1" ]; then
+if [ ${13} = "1" ]; then
 	C_SHIELD_ON=true
 else
 	C_SHIELD_ON=false
 fi
 # enable/disable Python shield
-if [ ${15} = "1" ]; then
+if [ ${14} = "1" ]; then
 	PY_SHIELD_ON=true
 else
 	PY_SHIELD_ON=false
 fi
 # enable/disable java security manager
-if [ ${16} = "1" ]; then
+if [ ${15d} = "1" ]; then
 	JAVA_POLICY="-Djava.security.manager -Djava.security.policy=java.policy"
 else
 	JAVA_POLICY=""
@@ -171,9 +169,9 @@ COMPILE_BEGIN_TIME=$(($(date +%s%N)/1000000));
 ########################################################################################################
 if [ "$EXT" = "java" ]; then
 	cp ../java.policy java.policy
-	cp $PROBLEMPATH/$UN/$FILENAME.java $MAINFILENAME.java
+	cp $PROBLEMPATH/$UN/$FILENAME.java $FILENAME.java
 	shj_log "Compiling as Java"
-	javac $MAINFILENAME.java >/dev/null 2>cerr
+	javac $FILENAME.java >/dev/null 2>cerr
 	EXITCODE=$?
 	COMPILE_END_TIME=$(($(date +%s%N)/1000000));
 	shj_log "Compiled. Exit Code=$EXITCODE  Execution Time: $((COMPILE_END_TIME-COMPILE_BEGIN_TIME)) ms"
@@ -424,9 +422,9 @@ for((i=1;i<=TST;i++)); do
 	
 	if [ "$EXT" = "java" ]; then
 		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFILENAME"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT java -mx${MEMLIMIT}k $JAVA_POLICY Program"
 		else
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "java -mx${MEMLIMIT}k $JAVA_POLICY $MAINFILENAME"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "java -mx${MEMLIMIT}k $JAVA_POLICY Program"
 		fi
 		EXITCODE=$?
 		if grep -iq "Too small initial heap" out || grep -iq "java.lang.OutOfMemoryError" err; then
@@ -454,9 +452,9 @@ for((i=1;i<=TST;i++)); do
 		if $SANDBOX_ON; then
 			#LD_PRELOAD=./EasySandbox.so ./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 			if $PERL_EXISTS; then
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill --sandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
+				./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill --sandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
 			else
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "LD_PRELOAD=./EasySandbox.so ./$EXEFILE"
+				./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "LD_PRELOAD=./EasySandbox.so ./$EXEFILE"
 			fi
 			EXITCODE=$?
 			# remove <<entering SECCOMP mode>> from beginning of output:
@@ -464,35 +462,35 @@ for((i=1;i<=TST;i++)); do
 		else
 			#./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 			if $PERL_EXISTS; then
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
+				./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT ./$EXEFILE"
 			else
-				./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./$EXEFILE"
+				./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./$EXEFILE"
 			fi
 			EXITCODE=$?
 		fi
 
 	elif [ "$EXT" = "py2" ]; then
 		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT python -O $FILENAME.py"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT python -O $FILENAME.py"
 		else
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "python -O $FILENAME.py"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "python -O $FILENAME.py"
 		fi
 		EXITCODE=$?
 
 	elif [ "$EXT" = "py3" ]; then
 		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT python3 -O $FILENAME.py"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT python3 -O $FILENAME.py"
 		else
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "python3 -O $FILENAME.py"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "python3 -O $FILENAME.py"
 		fi
 		EXITCODE=$?
 
 	elif [ "$EXT" = "cs" ]; then
 		#./$FILENAME <$PROBLEMPATH/in/input$i.txt >out 2>/dev/null
 		if $PERL_EXISTS; then
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT mono ./$FILENAME.exe"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "./timeout --just-kill -nosandbox -l $OUTLIMIT -t $TIMELIMIT -m $MEMLIMIT mono ./$FILENAME.exe"
 		else
-			./runcode.sh $EXT $MEMLIMIT $TIMELIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "mono ./$FILENAME.exe"
+			./runcode.sh $EXT $MEMLIMIT $TIMELIMITINT $PROBLEMPATH/in/input$i.txt "mono ./$FILENAME.exe"
 		fi
 		EXITCODE=$?
 	else

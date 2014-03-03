@@ -10,6 +10,7 @@ class Rejudge extends CI_Controller
 {
 
 	private $username;
+	private $email;
 	private $assignment;
 	private $user_level;
 
@@ -23,6 +24,7 @@ class Rejudge extends CI_Controller
 		if ( ! $this->session->userdata('logged_in')) // if not logged in
 			redirect('login');
 		$this->username = $this->session->userdata('username');
+		$this->email = $this->user_model->user_email($this->username);
 		$this->assignment = $this->assignment_model->assignment_info($this->user_model->selected_assignment($this->username));
 		$this->user_level = $this->user_model->get_user_level($this->username);
 		if ( $this->user_level <= 1) // permission denied
@@ -36,11 +38,12 @@ class Rejudge extends CI_Controller
 
 	public function index()
 	{
-file_put_contents("/home/hu/Desktop/log.txt","rejudge index\r\n",FILE_APPEND|LOCK_EX);
+		//file_put_contents("/home/hu/Desktop/log.txt","rejudge index\r\n",FILE_APPEND|LOCK_EX);
 		$this->form_validation->set_rules('problem_id', 'problem id', 'required|integer');
 
 		$data = array(
 			'username' => $this->username,
+			'email' => $this->email,
 			'user_level' => $this->user_level,
 			'all_assignments' => $this->assignment_model->all_assignments(),
 			'assignment' => $this->assignment,
@@ -54,7 +57,7 @@ file_put_contents("/home/hu/Desktop/log.txt","rejudge index\r\n",FILE_APPEND|LOC
 			$this->load->model('queue_model');
 			$this->queue_model->rejudge($this->assignment['id'], $problem_id);
 			process_the_queue();
-file_put_contents("/home/hu/Desktop/log.txt","rejudge -> process_the_queue();\r\n",FILE_APPEND|LOCK_EX);
+			//file_put_contents("/home/hu/Desktop/log.txt","rejudge -> process_the_queue();\r\n",FILE_APPEND|LOCK_EX);
 			$data['msg'] = array('Rejudge in progress');
 		}
 
@@ -70,19 +73,19 @@ file_put_contents("/home/hu/Desktop/log.txt","rejudge -> process_the_queue();\r\
 		if ( ! $this->input->is_ajax_request() )
 			show_404();
 
-		$this->form_validation->set_rules('submit_id', 'submit id', 'required|integer');
-		$this->form_validation->set_rules('username', 'username', 'required|alpha_numeric');
-		$this->form_validation->set_rules('assignment', 'assignment', 'required|integer');
-		$this->form_validation->set_rules('problem', 'problem', 'required|integer');
-
+		$this->form_validation->set_rules('submit_id', 'submit id', 'integer|greater_than[0]');
+		$this->form_validation->set_rules('userid', 'userid', 'integer|greater_than[0]');
+		$this->form_validation->set_rules('problem', 'problem', 'integer|greater_than[0]');
+		// TODO: check user permission
+		
 		if ($this->form_validation->run())
 		{
 			$this->load->model('queue_model');
 			$this->queue_model->rejudge_single(
 				array(
 					'submit_id' => $this->input->post('submit_id'),
-					'username' => $this->input->post('username'),
-					'assignment' => $this->input->post('assignment'),
+					'userid' => $this->input->post('userid'),
+					'assignment' => $this->assignment['id'],
 					'problem' => $this->input->post('problem'),
 				)
 			);
