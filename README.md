@@ -1,6 +1,7 @@
 # Sharif Judge
 + clone from here http://sharifjudge.ir
 + c# section developed by me
++ practice mode developed by me
 
 # System Requirement
 + Linux Ubuntu 12.04
