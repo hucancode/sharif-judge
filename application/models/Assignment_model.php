@@ -162,8 +162,10 @@ class Assignment_model extends CI_Model
 		$assignments = array();
 		foreach ($result as $item)
 		{
+			$item['practice_mode'] = $item['finish_time'] == NULL;
 			$assignments[$item['id']] = $item;
 		}
+		
 		return $assignments;
 	}
 

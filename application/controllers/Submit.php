@@ -147,10 +147,15 @@ class Submit extends CI_Controller
 		elseif ($this->user_model->get_user_level($this->username) == 0 && ! $this->assignment['open'])
 			// if assignment is closed, non-student users (admin, instructors) still can submit
 			$this->data['error'] = 'Selected assignment is closed.';
-		elseif (shj_now() < strtotime($this->assignment['start_time']))
-			$this->data['error'] = 'Selected assignment has not started.';
-		elseif (shj_now() > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time']) // deadline = finish_time + extra_time
-			$this->data['error'] = 'Selected assignment has finished.';
+		elseif ( ! $this->assignment['practice_mode'])
+		{
+			if(shj_now() < strtotime($this->assignment['start_time']))
+				$this->data['error'] = 'Selected assignment has not started.';
+			elseif (shj_now() > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time']) // deadline = finish_time + extra_time
+				$this->data['error'] = 'Selected assignment has finished.';
+			else
+				$this->data['error'] = 'none';
+		}
 		else
 			$this->data['error'] = 'none';
 
@@ -180,10 +185,13 @@ class Submit extends CI_Controller
 			show_error('You have already submitted for this problem. Your last submission is still in queue.');
 		if ($this->user_model->get_user_level($this->username)==0 && !$this->assignment['open'])
 			show_error('Selected assignment has been closed.');
-		if ($now < strtotime($this->assignment['start_time']))
-			show_error('Selected assignment has not started.');
-		if ($now > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time'])
-			show_error('Selected assignment has finished.');
+		if ( ! $this->assignment['practice_mode'])
+		{
+			if ($now < strtotime($this->assignment['start_time']))
+				show_error('Selected assignment has not started.');
+			if ($now > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time'])
+				show_error('Selected assignment has finished.');
+		}
 		$allowed = explode(",",$this->problem['allowed_languages']);
 		if ($_FILES['userfile']['error'] == 4)
 			show_error('No file chosen.');

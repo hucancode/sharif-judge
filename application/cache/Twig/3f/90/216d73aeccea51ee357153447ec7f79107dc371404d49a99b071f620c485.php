@@ -166,91 +166,128 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
 \t\t";
             // line 55
             if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
-            if (($this->getAttribute($_item_, "delay") > $this->getAttribute($_item_, "extra_time"))) {
+            if ($this->getAttribute($_item_, "practice_mode")) {
                 // line 56
-                echo "\t\t\t<span style=\"color: red;\">Finished</span>
+                echo "\t\t\t<span style=\"color: red;\">Practice Mode</span>
 \t\t";
             } else {
                 // line 58
                 echo "\t\t\t";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
-                echo twig_escape_filter($this->env, $this->getAttribute($_item_, "coefficient"), "html", null, true);
-                echo " %
-\t\t";
+                if (($this->getAttribute($_item_, "delay") > $this->getAttribute($_item_, "extra_time"))) {
+                    // line 59
+                    echo "\t\t\t\t<span style=\"color: red;\">Finished</span>
+\t\t\t";
+                } else {
+                    // line 61
+                    echo "\t\t\t\t";
+                    if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
+                    echo twig_escape_filter($this->env, $this->getAttribute($_item_, "coefficient"), "html", null, true);
+                    echo " %
+\t\t\t";
+                }
+                // line 63
+                echo "\t\t";
             }
-            // line 60
+            // line 64
             echo "\t</td>
-\t<td>";
-            // line 61
-            if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_item_, "start_time"), "html", null, true);
-            echo "</td>
-\t<td>";
-            // line 62
-            if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
-            echo twig_escape_filter($this->env, $this->getAttribute($_item_, "finish_time"), "html", null, true);
-            echo "</td>
 \t<td>
 \t\t";
-            // line 64
+            // line 66
+            if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
+            if ($this->getAttribute($_item_, "practice_mode")) {
+                // line 67
+                echo "\t\t\t<span style=\"color: red;\">Practice Mode</span>
+\t\t";
+            } else {
+                // line 69
+                echo "\t\t\t";
+                if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
+                echo twig_escape_filter($this->env, $this->getAttribute($_item_, "start_time"), "html", null, true);
+                echo "
+\t\t";
+            }
+            // line 71
+            echo "\t</td>
+\t<td>
+\t\t";
+            // line 73
+            if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
+            if ($this->getAttribute($_item_, "practice_mode")) {
+                // line 74
+                echo "\t\t\t<span style=\"color: red;\">Practice Mode</span>
+\t\t";
+            } else {
+                // line 76
+                echo "\t\t\t";
+                if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
+                echo twig_escape_filter($this->env, $this->getAttribute($_item_, "finish_time"), "html", null, true);
+                echo "
+\t\t";
+            }
+            // line 78
+            echo "\t</td>
+\t<td>
+\t\t";
+            // line 80
             if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
             if ($this->getAttribute($_item_, "open")) {
-                // line 65
+                // line 81
                 echo "\t\t\t<span style=\"color: green;\">Open</span>
 \t\t";
             } else {
-                // line 67
+                // line 83
                 echo "\t\t\t<span style=\"color: red;\">Close</span>
 \t\t";
             }
-            // line 69
+            // line 85
             echo "\t</td>
 \t<td>
 \t\t";
-            // line 71
+            // line 87
             if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
             if (($_user_level_ >= 2)) {
-                // line 72
+                // line 88
                 echo "\t\t\t<a href=\"";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
                 echo site_url(("assignments/downloadtestsdesc/" . $this->getAttribute($_item_, "id")));
                 echo "\"><i title=\"Download Tests and Descriptions\" class=\"fa fa-cloud-download fa-lg color11\"></i></a>
 \t\t";
             }
-            // line 74
+            // line 90
             echo "\t\t";
             if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
             if (($_user_level_ >= 1)) {
-                // line 75
+                // line 91
                 echo "\t\t\t<a href=\"";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
                 echo site_url(("assignments/download/" . $this->getAttribute($_item_, "id")));
                 echo "\"><i title=\"Download Final Codes\" class=\"fa fa-download fa-lg color12\"></i></a>
 \t\t";
             }
-            // line 77
+            // line 93
             echo "\t\t";
             if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
             if (($_user_level_ >= 2)) {
-                // line 78
+                // line 94
                 echo "\t\t\t<a href=\"";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
                 echo site_url(("assignments/edit/" . $this->getAttribute($_item_, "id")));
                 echo "\"><i title=\"Edit\" class=\"fa fa-pencil fa-lg color3\"></i></a>
 \t\t";
             }
-            // line 80
+            // line 96
             echo "\t\t";
             if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
             if (($_user_level_ >= 2)) {
-                // line 81
+                // line 97
                 echo "\t\t\t<a href=\"";
                 if (isset($context["item"])) { $_item_ = $context["item"]; } else { $_item_ = null; }
                 echo site_url(("assignments/delete/" . $this->getAttribute($_item_, "id")));
                 echo "\"><i title=\"Delete\" class=\"fa fa-times fa-lg color1\"></i></a>
 \t\t";
             }
-            // line 83
+            // line 99
             echo "\t</td>
 </tr>
 ";
@@ -258,7 +295,7 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['item'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 86
+        // line 102
         echo "</table>
 ";
     }
@@ -275,6 +312,6 @@ class __TwigTemplate_3f90216d73aeccea51ee357153447ec7f79107dc371404d49a99b071f62
 
     public function getDebugInfo()
     {
-        return array (  262 => 86,  254 => 83,  247 => 81,  243 => 80,  236 => 78,  232 => 77,  225 => 75,  221 => 74,  214 => 72,  211 => 71,  207 => 69,  203 => 67,  199 => 65,  196 => 64,  190 => 62,  185 => 61,  182 => 60,  175 => 58,  171 => 56,  168 => 55,  159 => 53,  148 => 52,  143 => 51,  134 => 50,  131 => 49,  126 => 48,  109 => 33,  105 => 31,  102 => 30,  99 => 29,  89 => 27,  84 => 26,  74 => 24,  69 => 23,  66 => 22,  58 => 16,  55 => 15,  52 => 14,  46 => 10,  40 => 9,  34 => 8,  29 => 6,);
+        return array (  299 => 102,  291 => 99,  284 => 97,  280 => 96,  273 => 94,  269 => 93,  262 => 91,  258 => 90,  251 => 88,  248 => 87,  244 => 85,  240 => 83,  236 => 81,  233 => 80,  229 => 78,  222 => 76,  218 => 74,  215 => 73,  211 => 71,  204 => 69,  200 => 67,  197 => 66,  193 => 64,  190 => 63,  183 => 61,  179 => 59,  175 => 58,  171 => 56,  168 => 55,  159 => 53,  148 => 52,  143 => 51,  134 => 50,  131 => 49,  126 => 48,  109 => 33,  105 => 31,  102 => 30,  99 => 29,  89 => 27,  84 => 26,  74 => 24,  69 => 23,  66 => 22,  58 => 16,  55 => 15,  52 => 14,  46 => 10,  40 => 9,  34 => 8,  29 => 6,);
     }
 }

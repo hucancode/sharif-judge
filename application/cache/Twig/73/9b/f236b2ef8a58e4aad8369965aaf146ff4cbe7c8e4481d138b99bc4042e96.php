@@ -118,16 +118,6 @@ shj.offset = moment('";
         echo shj_now_str();
         echo "').diff(moment());
 shj.time = moment();
-shj.finish_time = moment(\"";
-        // line 41
-        if (isset($context["assignment"])) { $_assignment_ = $context["assignment"]; } else { $_assignment_ = null; }
-        echo $this->getAttribute($_assignment_, "finish_time");
-        echo "\");
-shj.extra_time = moment.duration(";
-        // line 42
-        if (isset($context["assignment"])) { $_assignment_ = $context["assignment"]; } else { $_assignment_ = null; }
-        echo $this->getAttribute($_assignment_, "extra_time");
-        echo ", 'seconds');
 // notifications
 shj.check_for_notifications = false;
 shj.notif_check_delay = 30;
@@ -135,52 +125,52 @@ shj.color_scheme = 'github';
 </script>
 
 <script type=\"text/javascript\" src=\"";
-        // line 49
+        // line 47
         echo base_url("assets/js/shj_functions.js");
         echo "\"></script>
 
 ";
-        // line 51
+        // line 49
         $this->displayBlock('other_assets', $context, $blocks);
-        // line 52
+        // line 50
         echo "
 <body id=\"body\">
 ";
-        // line 54
+        // line 52
         $this->env->loadTemplate("templates/top_bar.twig")->display($context);
-        // line 55
+        // line 53
         $this->env->loadTemplate("templates/side_bar.twig")->display($context);
-        // line 56
+        // line 54
         echo "<div id=\"main_container\" class=\"scroll-wrapper\">
 \t<div class=\"scroll-content\">
 
 \t\t<div id=\"page_title\">
 \t\t\t<i class=\"fa ";
-        // line 60
+        // line 58
         $this->displayBlock('icon', $context, $blocks);
         echo "\"></i>
 \t\t\t<span dir=\"auto\">";
-        // line 61
+        // line 59
         $this->displayBlock('title', $context, $blocks);
         echo "</span>
 \t\t\t";
-        // line 62
+        // line 60
         $this->displayBlock('title_menu', $context, $blocks);
-        // line 63
+        // line 61
         echo "\t\t</div>
 
 \t\t<div id=\"main_content\">
 \t\t\t";
-        // line 66
+        // line 64
         $this->displayBlock('main_content', $context, $blocks);
-        // line 68
+        // line 66
         echo "\t\t</div>
 \t</div>
 </div>
 ";
-        // line 71
+        // line 69
         $this->displayBlock('body_end', $context, $blocks);
-        // line 72
+        // line 70
         echo "</body>
 </html>
 ";
@@ -191,34 +181,34 @@ shj.color_scheme = 'github';
     {
     }
 
-    // line 51
+    // line 49
     public function block_other_assets($context, array $blocks = array())
     {
     }
 
-    // line 60
+    // line 58
     public function block_icon($context, array $blocks = array())
     {
     }
 
-    // line 61
+    // line 59
     public function block_title($context, array $blocks = array())
     {
     }
 
-    // line 62
+    // line 60
     public function block_title_menu($context, array $blocks = array())
     {
     }
 
-    // line 66
+    // line 64
     public function block_main_content($context, array $blocks = array())
     {
-        // line 67
+        // line 65
         echo "\t\t\t";
     }
 
-    // line 71
+    // line 69
     public function block_body_end($context, array $blocks = array())
     {
     }
@@ -235,6 +225,6 @@ shj.color_scheme = 'github';
 
     public function getDebugInfo()
     {
-        return array (  222 => 71,  218 => 67,  215 => 66,  210 => 62,  205 => 61,  200 => 60,  195 => 51,  190 => 9,  184 => 72,  182 => 71,  177 => 68,  175 => 66,  170 => 63,  168 => 62,  164 => 61,  160 => 60,  154 => 56,  152 => 55,  150 => 54,  146 => 52,  144 => 51,  139 => 49,  128 => 42,  123 => 41,  118 => 39,  113 => 37,  109 => 36,  101 => 31,  96 => 29,  92 => 28,  87 => 26,  83 => 25,  79 => 24,  75 => 23,  70 => 21,  66 => 20,  62 => 19,  58 => 18,  54 => 17,  50 => 16,  44 => 13,  40 => 12,  36 => 11,  31 => 9,  26 => 6,);
+        return array (  212 => 69,  208 => 65,  205 => 64,  200 => 60,  195 => 59,  190 => 58,  185 => 49,  180 => 9,  174 => 70,  172 => 69,  167 => 66,  165 => 64,  160 => 61,  158 => 60,  154 => 59,  150 => 58,  144 => 54,  142 => 53,  140 => 52,  136 => 50,  134 => 49,  129 => 47,  118 => 39,  113 => 37,  109 => 36,  101 => 31,  96 => 29,  92 => 28,  87 => 26,  83 => 25,  79 => 24,  75 => 23,  70 => 21,  66 => 20,  62 => 19,  58 => 18,  54 => 17,  50 => 16,  44 => 13,  40 => 12,  36 => 11,  31 => 9,  26 => 6,);
     }
 }

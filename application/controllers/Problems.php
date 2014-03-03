@@ -77,9 +77,9 @@ class Problems extends CI_Controller
 		$path = rtrim($this->settings_model->get_setting('assignments_root'),'/')."/assignment_{$assignment_id}/p{$problem_id}/desc.html";
 		if (file_exists($path))
 			$data['problem']['description'] = file_get_contents($path);
-
-		if ( ! $assignment['practice_mode'] && shj_now() > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time']) // deadline = finish_time + extra_time
-			$data['finished'] = TRUE;
+		if( ! $this->assignment['practice_mode'])
+			if (shj_now() > strtotime($this->assignment['finish_time'])+$this->assignment['extra_time']) // deadline = finish_time + extra_time
+				$data['finished'] = TRUE;
 
 		$this->twig->display('pages/problems.twig', $data);
 		

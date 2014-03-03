@@ -58,14 +58,9 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
 \t\t\t<span class=\"countdown_num\">PRACTICE MODE</span><br>
 \t\t\t<span class=\"time_label\">no score and time limit</span>
 \t\t</div>
-\t\t<script >
-\t\t\t\$(document).ready(function () {
-\t\t\t\tclearInterval(update_clock);
-\t\t\t});
-\t\t</script>
 \t\t";
         } else {
-            // line 30
+            // line 25
             echo "\t\t<div class=\"time_block\">
 \t\t\t<span id=\"time_days\" class=\"countdown_num\"></span><br>
 \t\t\t<span class=\"time_label\" id=\"days_label\"></span>
@@ -82,9 +77,26 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
 \t\t\t<span id=\"time_seconds\" class=\"countdown_num\"></span><br>
 \t\t\t<span class=\"time_label\" id=\"seconds_label\"></span>
 \t\t</div>
+\t\t<script>
+\t\t\tshj.finish_time = moment(\"";
+            // line 42
+            if (isset($context["assignment"])) { $_assignment_ = $context["assignment"]; } else { $_assignment_ = null; }
+            echo $this->getAttribute($_assignment_, "finish_time");
+            echo "\");
+\t\t\tshj.extra_time = moment.duration(";
+            // line 43
+            if (isset($context["assignment"])) { $_assignment_ = $context["assignment"]; } else { $_assignment_ = null; }
+            echo $this->getAttribute($_assignment_, "extra_time");
+            echo ", 'seconds');
+\t\t\t\$(document).ready(function () {
+\t\t\t\t// update the clock and countdown timer every 1 second
+\t\t\t\tshj.update_clock();
+\t\t\t\twindow.setInterval(shj.update_clock, 1000);
+\t\t\t});
+\t\t</script>
 \t\t";
         }
-        // line 47
+        // line 51
         echo "\t</div>
 \t<div class=\"top_object countdown\" id=\"extra_time\">
 \t\t<i class=\"fa fa-plus-square fa-2x\"></i>
@@ -94,40 +106,40 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
 \t</div>
 \t<div id=\"shj_logo\" class=\"top_left\">
 \t\t<a href=\"";
-        // line 55
+        // line 59
         echo site_url("/");
         echo "\">
 \t\t\t<img src=\"";
-        // line 56
+        // line 60
         echo base_url("assets/images/paperplane.svg");
         echo "\"/>
 \t\t\t<h1 class=\"shjlogo-text\">Sharif <span>Judge</span></h1>
 \t\t</a>
 \t</div>
 \t";
-        // line 60
+        // line 64
         if (isset($context["user_level"])) { $_user_level_ = $context["user_level"]; } else { $_user_level_ = null; }
         if (($_user_level_ >= 2)) {
-            // line 61
+            // line 65
             echo "\t<div class=\"top_object shj_menu top_left\" id=\"admin_tools_top\">
 \t\tTools
 \t\t<ul class=\"top_menu\">
 \t\t\t<li><a href=\"";
-            // line 64
+            // line 68
             echo site_url("rejudge");
             echo "\">Rejudge</a></li>
 \t\t\t<li><a href=\"";
-            // line 65
+            // line 69
             echo site_url("queue");
             echo "\">Submission Queue</a></li>
 \t\t</ul>
 \t</div>
 \t";
         }
-        // line 69
+        // line 73
         echo "\t<div class=\"top_object shj_menu top_left\" id=\"select_assignment_top\">
 \t\t<a href=\"";
-        // line 70
+        // line 74
         echo site_url("assignments");
         echo "\"><span dir=\"auto\" class=\"assignment_name\">";
         if (isset($context["assignment"])) { $_assignment_ = $context["assignment"]; } else { $_assignment_ = null; }
@@ -135,15 +147,15 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
         echo "</span></a>
 \t\t<ul class=\"top_menu\" id=\"select_assignment_menu\">
 \t\t\t";
-        // line 72
+        // line 76
         if (isset($context["all_assignments"])) { $_all_assignments_ = $context["all_assignments"]; } else { $_all_assignments_ = null; }
         $context['_parent'] = (array) $context;
         $context['_seq'] = twig_ensure_traversable(twig_slice($this->env, twig_reverse_filter($this->env, $_all_assignments_), 0, 5));
         foreach ($context['_seq'] as $context["_key"] => $context["assignment_item"]) {
-            // line 73
+            // line 77
             echo "\t\t\t\t<li class=\"assignment_block select_assignment\">
 \t\t\t\t\t<i class=\"fa ";
-            // line 74
+            // line 78
             if (isset($context["assignment_item"])) { $_assignment_item_ = $context["assignment_item"]; } else { $_assignment_item_ = null; }
             if (isset($context["assignment"])) { $_assignment_ = $context["assignment"]; } else { $_assignment_ = null; }
             echo ((($this->getAttribute($_assignment_item_, "id") == $this->getAttribute($_assignment_, "id"))) ? ("fa-check-square-o color6") : ("fa-square-o"));
@@ -152,7 +164,7 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
             echo twig_escape_filter($this->env, $this->getAttribute($_assignment_item_, "id"), "html", null, true);
             echo "\"></i>
 \t\t\t\t\t<span class=\"assignment_item\" dir=\"auto\">";
-            // line 75
+            // line 79
             if (isset($context["assignment_item"])) { $_assignment_item_ = $context["assignment_item"]; } else { $_assignment_item_ = null; }
             echo twig_escape_filter($this->env, $this->getAttribute($_assignment_item_, "name"), "html", null, true);
             echo "</span>
@@ -162,10 +174,10 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['_key'], $context['assignment_item'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 78
+        // line 82
         echo "\t\t\t<li>
 \t\t\t<a href=\"";
-        // line 79
+        // line 83
         echo site_url("assignments");
         echo "\">All Assignments</a>
 \t\t\t</li>
@@ -190,6 +202,6 @@ class __TwigTemplate_1776c551b01c63e7183fb1a573751a12fff9ffd59196a74ec1c877f9b71
 
     public function getDebugInfo()
     {
-        return array (  169 => 79,  166 => 78,  156 => 75,  147 => 74,  144 => 73,  139 => 72,  131 => 70,  128 => 69,  121 => 65,  117 => 64,  112 => 61,  109 => 60,  102 => 56,  98 => 55,  88 => 47,  69 => 30,  57 => 20,  54 => 19,  46 => 14,  42 => 13,  36 => 11,  31 => 10,  26 => 8,  19 => 6,);
+        return array (  181 => 83,  178 => 82,  168 => 79,  159 => 78,  156 => 77,  151 => 76,  143 => 74,  140 => 73,  133 => 69,  129 => 68,  124 => 65,  121 => 64,  114 => 60,  110 => 59,  100 => 51,  88 => 43,  83 => 42,  64 => 25,  57 => 20,  54 => 19,  46 => 14,  42 => 13,  36 => 11,  31 => 10,  26 => 8,  19 => 6,);
     }
 }

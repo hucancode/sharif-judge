@@ -100,6 +100,7 @@ class Assignments extends CI_Controller
 				'done' => 1,
 				'finish_time' => $this->assignment['finish_time'],
 				'extra_time' => $this->assignment['extra_time'],
+				'practice_mode' => $this->assignment['practice_mode']
 			);
 		}
 		else

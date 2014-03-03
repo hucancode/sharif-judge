@@ -52,14 +52,30 @@
 	<td><a href="{{ site_url('problems/'~item.id) }}">{{ item.problems }} problem{{ item.problems != 1 ? 's' }}</a></td>
 	<td>{{ item.total_submits }} submission{{ item.total_submits != 1 ? 's' }}</td>
 	<td>
-		{% if item.delay > item.extra_time %}
-			<span style="color: red;">Finished</span>
+		{% if item.practice_mode %}
+			<span style="color: red;">Practice Mode</span>
 		{% else %}
-			{{ item.coefficient }} %
+			{% if item.delay > item.extra_time %}
+				<span style="color: red;">Finished</span>
+			{% else %}
+				{{ item.coefficient }} %
+			{% endif %}
 		{% endif %}
 	</td>
-	<td>{{ item.start_time }}</td>
-	<td>{{ item.finish_time }}</td>
+	<td>
+		{% if item.practice_mode %}
+			<span style="color: red;">Practice Mode</span>
+		{% else %}
+			{{ item.start_time }}
+		{% endif %}
+	</td>
+	<td>
+		{% if item.practice_mode %}
+			<span style="color: red;">Practice Mode</span>
+		{% else %}
+			{{ item.finish_time }}
+		{% endif %}
+	</td>
 	<td>
 		{% if item.open %}
 			<span style="color: green;">Open</span>

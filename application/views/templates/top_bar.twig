@@ -21,11 +21,6 @@
 			<span class="countdown_num">PRACTICE MODE</span><br>
 			<span class="time_label">no score and time limit</span>
 		</div>
-		<script >
-			$(document).ready(function () {
-				clearInterval(update_clock);
-			});
-		</script>
 		{% else %}
 		<div class="time_block">
 			<span id="time_days" class="countdown_num"></span><br>
@@ -43,6 +38,15 @@
 			<span id="time_seconds" class="countdown_num"></span><br>
 			<span class="time_label" id="seconds_label"></span>
 		</div>
+		<script>
+			shj.finish_time = moment("{{ assignment.finish_time|raw }}");
+			shj.extra_time = moment.duration({{ assignment.extra_time|raw }}, 'seconds');
+			$(document).ready(function () {
+				// update the clock and countdown timer every 1 second
+				shj.update_clock();
+				window.setInterval(shj.update_clock, 1000);
+			});
+		</script>
 		{% endif %}
 	</div>
 	<div class="top_object countdown" id="extra_time">

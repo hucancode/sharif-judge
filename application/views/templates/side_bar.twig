@@ -43,30 +43,28 @@
 				<span class="sidebar_text">Problems</span>
 			</a>
 		</li>
-		<li class="color-submit{{ selected=='submit' ? ' selected' }}">
-			<a href="{{ site_url('submit') }}">
-				<i class="fa fa-location-arrow fa-lg"></i>
-				<span class="sidebar_text">Submit</span>
-			</a>
-		</li>
+		{% if not assignment.practice_mode %}
 		<li class="color-final_submissions{{ selected=='final_submissions' ? ' selected' }}">
 			<a href="{{ site_url('submissions/final') }}">
 				<i class="fa fa-map-marker fa-lg"></i>
 				<span class="sidebar_text">Final Submissions</span>
 			</a>
 		</li>
+		{% endif %}
 		<li class="color-all_submissions{{ selected=='all_submissions' ? ' selected' }}">
 			<a href="{{ site_url('submissions/all') }}">
 				<i class="fa fa-bars fa-lg"></i>
 				<span class="sidebar_text">All Submissions</span>
 			</a>
 		</li>
+		{% if not assignment.practice_mode %}
 		<li class="color-scoreboard{{ selected=='scoreboard' ? ' selected' }}">
 			<a href="{{ site_url('scoreboard') }}">
 				<i class="fa fa-star fa-lg"></i>
 				<span class="sidebar_text">Scoreboard</span>
 			</a>
 		</li>
+		{% endif %}
 	</ul>
 	<div id="sidebar_bottom">
 		<p>

@@ -327,10 +327,6 @@ $(document).ready(function () {
 		shj.sidebar_close(0);
 
 	$("#shj_collapse").click(shj.toggle_collapse);
-
-	// update the clock and countdown timer every 1 second
-	shj.update_clock();
-	window.setInterval(shj.update_clock, 1000);
 });
 
 
@@ -372,9 +368,18 @@ $(document).ready(function () {
 						checkboxes.removeClass('fa-check-square-o color6').addClass('fa-square-o');
 						checkboxes.filter("[data-id='" + id + "']").removeClass('fa-square-o').addClass('fa-check-square-o color6');
 						$(".assignment_name").html($('.top_object [data-id="' + id + '"]').parents('.assignment_block').children('.assignment_item').html());
-						shj.finish_time = moment(response.finish_time);
-						shj.extra_time  = moment.duration(parseInt(response.extra_time, 10), 'seconds');
-						shj.update_clock();
+						if(!respone.practice_mode)
+						{
+							shj.finish_time = moment(response.finish_time);
+							shj.extra_time  = moment.duration(parseInt(response.extra_time, 10), 'seconds');
+							clearInterval(shj.update_clock);
+							shj.update_clock();
+							window.setInterval(shj.update_clock, 1000);
+						}
+						else
+						{
+							clearInterval(shj.update_clock);
+						}
 					}
 					else
 						shj.loading_failed(response.message);

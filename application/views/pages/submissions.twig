@@ -48,13 +48,17 @@
 
 <p>{{ view|title }} Submissions of <span dir="auto">{{ assignment.name }}</span></p>
 {%  if view == 'all' %}
-<p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
+	{% if not assignment.practice_mode %}
+		<p><i class="fa fa-warning color3"></i> You cannot change your final submissions after assignment finishes.</p>
+	{% endif %}
 {% endif %}
 <table class="sharif_table">
 	<thead>
 		<tr>
 		{% if view == 'all' %}
-			<th width="1%" rowspan="2">Final</th>
+			{% if not assignment.practice_mode %}
+				<th width="1%" rowspan="2">Final</th>
+			{% endif %}
 		{% endif %}
 		{% if user_level > 0 %}
 				{% if view == 'all' %}
@@ -66,8 +70,12 @@
 				<th width="6%" rowspan="2">Username</th>
 				<th width="14%" rowspan="2">Name</th>
 				<th width="4%" rowspan="2">Problem</th>
+				{% if not assignment.practice_mode %}
 				<th width="14%" rowspan="2">Submit Time</th>
 				<th colspan="3">Score</th>
+				{% else %}
+				<th rowspan="2">Score</th>
+				{% endif %}
 				<th width="1%" rowspan="2">Language</th>
 				<th width="6%" rowspan="2">Status</th>
 				<th width="6%" rowspan="2">Code</th>
@@ -78,24 +86,32 @@
 				<th width="1%" rowspan="2">Actions</th>
 				{% endif %}
 			</tr>
+			{% if not assignment.practice_mode %}
 			<tr>
 				<th width="5%" class="score">Score</th>
 				<th width="5%" class="score">Delay<br>%</th>
 				<th width="5%" class="score">Final Score</th>
 			</tr>
+			{% endif %}
 		{% else %}
 				<th width="10%" rowspan="2">Problem</th>
 				<th width="30%" rowspan="2">Submit Time</th>
-				<th width="7%" colspan="3">Score</th>
+				{% if not assignment.practice_mode %}
+					<th width="7%" colspan="3">Score</th>
+				{% else %}
+					<th width="7%" rowspan="2">Score</th>
+				{% endif %}
 				<th width="1%" rowspan="2">Language</th>
 				<th width="30%" rowspan="2">Status</th>
 				<th width="15%" rowspan="2">Code</th>
 			</tr>
-			<tr>
-				<th width="7%" class="score">Score</th>
-				<th width="7%" class="score">Delay<br>%</th>
-				<th width="7%" class="score">Final Score</th>
-			</tr>
+			{% if not assignment.practice_mode %}
+				<tr>
+					<th width="7%" class="score">Score</th>
+					<th width="7%" class="score">Delay<br>%</th>
+					<th width="7%" class="score">Final Score</th>
+				</tr>
+			{% endif %}
 		{% endif %}
 	</thead>
 	{% set i=0 %}
@@ -109,9 +125,11 @@
 		{% set un = submission.username %}
 		<tr data-u="{{ submission.userid }}" data-p="{{ submission.problem }}" data-s="{{ submission.submit_id }}" {% if view == 'final' and j is even %}class="hl"{% endif %}>
 		{% if view == 'all' %}
-			<td>
-				<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>
-			</td>
+			{% if not assignment.practice_mode %}
+				<td>
+					<i class="pointer set_final fa {{ submission.is_final ? 'fa-check-circle-o color11' : 'fa-circle-o' }} fa-2x"></i>
+				</td>
+			{% endif %}
 		{% endif %}
 		{% if user_level > 0 %}
 			{% if view == 'all' %}
@@ -125,8 +143,11 @@
 			<td dir="auto">{{ submission.name }}</td>
 		{% endif %}
 			<td><a href="{{ site_url('submissions/'~view~(filter_user?'/user/'~filter_user)~'/problem/'~submission.problem) }}" title="{{ problems[submission.problem].name }}">{{ submission.problem }}</a></td>
-			<td>{{ submission.time }}</td>
-			<td>{{ submission.score }}</td>
+			{% if not assignment.practice_mode %}
+				<td>{{ submission.time }}</td>
+			{% endif %}
+				<td>{{ submission.score }}</td>
+			{% if not assignment.practice_mode %}
 			<td>
 				<span class="tiny_text" {{ submission.delay > 0 ? 'style="color:red;"' }}'>
 				{% if submission.delay <= 0 %}
@@ -138,6 +159,7 @@
 				{{ submission.coefficient }}%
 			</td>
 			<td style="font-weight: bold;">{{ submission.final_score }} </td>
+			{% endif %}
 			<td>{{ submission.language }}</td>
 			<td class="status">
 				{% if submission.status == 'PENDING' %}
