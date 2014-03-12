@@ -343,11 +343,10 @@ class Assignments extends CI_Controller
 			show_404();
 
 		$this->form_validation->set_rules('assignment_name', 'assignment name', 'required|max_length[50]');
-		$this->form_validation->set_rules('start_time', 'start time', 'required');
-		$this->form_validation->set_rules('finish_time', 'finish time', 'required');
-		$this->form_validation->set_rules('extra_time', 'extra time', 'required');
-		$this->form_validation->set_rules('participants', 'participants', '');
-		$this->form_validation->set_rules('late_rule', 'coefficient rule', 'required');
+		$this->form_validation->set_rules('start_time', 'start time', '');
+		$this->form_validation->set_rules('finish_time', 'finish time', '');
+		$this->form_validation->set_rules('extra_time', 'extra time', '');
+		$this->form_validation->set_rules('late_rule', 'coefficient rule', '');
 		$this->form_validation->set_rules('name[]', 'problem name', 'required|max_length[50]');
 		$this->form_validation->set_rules('score[]', 'problem score', 'required|integer');
 		$this->form_validation->set_rules('c_time_limit[]', 'C/C++ time limit', 'required|integer');
