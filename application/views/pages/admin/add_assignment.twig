@@ -29,7 +29,7 @@
 	<td><input type="text" name="java_time_limit[]" class="sharif_input tiny2" value="2000"/></td>\
 	<td><input type="text" name="cs_time_limit[]" class="sharif_input tiny2" value="2000"/></td>\
 	<td><input type="text" name="memory_limit[]" class="sharif_input tiny" value="50000"/></td>\
-	<td><input type="text" name="languages[]" class="sharif_input short2" value="C,C++,Python 2,Python 3,Java,C#"/></td>\
+	<td><input type="text" name="languages[]" class="sharif_input short2" value="c,c++,python2,python3,java,c#"/></td>\
 	<td><input type="text" name="diff_cmd[]" class="sharif_input tiny" value="diff"/></td>\
 	<td><input type="text" name="diff_arg[]" class="sharif_input tiny" value="-bB"/></td>\
 	<td><input type="checkbox" name="is_upload_only[]" class="check" value="PID"/><td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer"></i></td></td>\
@@ -81,8 +81,13 @@
 <p>
 	<i class="fa fa-info-circle fa-lg color8"></i> If you don't want to change tests, just do not upload any file.
 </p>
+<p>
+	<i class="fa fa-warning color3"></i> If you turn an assignment from non-practice to practice, you will lost your late-rule script
+</p>
 {% endif %}
-
+<p>
+	<i class="fa fa-info-circle fa-lg color3"></i> If you want to add/edit practice assignment, just set finish time to empty.
+</p>
 {{ form_open_multipart(edit ? 'assignments/edit/'~edit_assignment.id : 'assignments/add') }}
 <div class="panel_left">
 	<input type="hidden" name="number_of_problems" id="nop" value="{{ edit ? edit_assignment.problems : problems|length }}"/>
@@ -93,12 +98,12 @@
 	</p>
 	<p class="input_p">
 		<label for="start_time">Start Time</label>
-		<input id="start_time" type="text" name="start_time" class="sharif_input medium" value="{{ edit ? edit_assignment.start_time|date('m/d/Y H:i') : set_value('start_time') }}" />
+		<input id="start_time" type="text" name="start_time" class="sharif_input medium" value="{{ edit ? edit_assignment.start_time : set_value('start_time') }}" />
 		{{ form_error('start_time', '<div class="shj_error">', '</div>') }}
 	</p>
 	<p class="input_p">
 		<label for="finish_time">Finish Time</label>
-		<input id="finish_time" type="text" name="finish_time" class="sharif_input medium" value="{{ edit ? edit_assignment.finish_time|date('m/d/Y H:i') : set_value('finish_time') }}" />
+		<input id="finish_time" type="text" name="finish_time" class="sharif_input medium" value="{{ edit ? edit_assignment.finish_time : set_value('finish_time') }}" />
 		{{ form_error('finish_time', '<div class="shj_error">', '</div>') }}
 	</p>
 	<p class="input_p clear">
@@ -106,7 +111,7 @@
 			Extra Time (minutes)<br>
 			<span class="form_comment">Extra time for late submissions.</span>
 		</label>
-		<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="sharif_input medium" value="{{ edit ? edit_assignment.extra_time|extra_time_formatter : set_value('extra_time') }}" />
+		<input id="form_extra_time" type="text" name="extra_time" id="extra_time" class="sharif_input medium" value="{{ edit ? edit_assignment.extra_time : set_value('extra_time') }}" />
 		{{ form_error('extra_time', '<div class="shj_error">', '</div>') }}
 	</p>
 	<p class="input_p clear">
@@ -154,7 +159,6 @@
 		<th rowspan="2">Allowed<br>Languages (<a target="_blank" href="http://docs.sharifjudge.ir/add_assignment#allowed_languages">?</a>)</th>
 		<th rowspan="2">Diff<br>Command (<a target="_blank" href="http://docs.sharifjudge.ir/add_assignment#diff_command">?</a>)</th>
 		<th rowspan="2">Diff<br>Argument (<a target="_blank" href="http://docs.sharifjudge.ir/add_assignment#diff_arguments">?</a>)</th>
-		<th rowspan="2">Upload<br>Only (<a target="_blank" href="http://docs.sharifjudge.ir/add_assignment#upload_only">?</a>)</th>
 		<th rowspan="2"></th>
 	</tr>
 	<tr>
@@ -175,7 +179,6 @@
 			<td><input type="text" name="languages[]" class="sharif_input short2" value="{{ problem.allowed_languages }}"/></td>
 			<td><input type="text" name="diff_cmd[]" class="sharif_input tiny" value="{{ problem.diff_cmd }}"/></td>
 			<td><input type="text" name="diff_arg[]" class="sharif_input tiny" value="{{ problem.diff_arg }}"/></td>
-			<td><input type="checkbox" name="is_upload_only[]" class="check" value="{{ problem.id }}" {{ problem.is_upload_only ? 'checked' }}/></td>
 			<td><i class="fa fa-times-circle fa-lg color1 delete_problem pointer"></i></td>
 		</tr>
 	{% endfor %}

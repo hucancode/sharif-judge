@@ -59,19 +59,30 @@ class Assignments extends CI_Controller
 
 		foreach ($data['all_assignments'] as &$item)
 		{
-			$extra_time = $item['extra_time'];
-			$delay = shj_now()-strtotime($item['finish_time']);;
-			ob_start();
-			if ( eval($item['late_rule']) === FALSE )
-				$coefficient = -1;
-			if (!isset($coefficient))
-				$coefficient = -1;
-			ob_end_clean();
-			$item['coefficient'] = $coefficient;
-			$item['delay'] = $delay;
-			$item['extra_time'] = $extra_time;
-			$item['start_time'] = date("Y-m-d H:i", strtotime($item['start_time']));
-			$item['finish_time'] = date("Y-m-d H:i", strtotime($item['finish_time']));
+			if($item['finish_time'] != NULL)
+			{
+				$extra_time = $item['extra_time'];
+				$delay = shj_now()-strtotime($item['finish_time']);;
+				ob_start();
+				if ( eval($item['late_rule']) === FALSE )
+					$coefficient = -1;
+				if (!isset($coefficient))
+					$coefficient = -1;
+				ob_end_clean();
+				$item['coefficient'] = $coefficient;
+				$item['delay'] = $delay;
+				$item['extra_time'] = $extra_time;
+				$item['start_time'] = date("Y-m-d H:i", strtotime($item['start_time']));
+				$item['finish_time'] = date("Y-m-d H:i", strtotime($item['finish_time']));
+			}
+			else
+			{
+				$item['coefficient'] = 100;
+				$item['delay'] = 0;
+				$item['extra_time'] = 0;
+				$item['start_time'] = NULL;
+				$item['finish_time'] = NULL;
+			}
 		}
 
 		$this->twig->display('pages/assignments.twig', $data);
@@ -300,7 +311,7 @@ class Assignments extends CI_Controller
 				$c_tl = $this->input->post('c_time_limit');
 				$py_tl = $this->input->post('python_time_limit');
 				$java_tl = $this->input->post('java_time_limit');
-				$cs_tl = $this->input->post('java_time_limit');
+				$cs_tl = $this->input->post('cs_time_limit');
 				$ml = $this->input->post('memory_limit');
 				$ft = $this->input->post('languages');
 				$dc = $this->input->post('diff_cmd');
@@ -343,10 +354,7 @@ class Assignments extends CI_Controller
 			show_404();
 
 		$this->form_validation->set_rules('assignment_name', 'assignment name', 'required|max_length[50]');
-		$this->form_validation->set_rules('start_time', 'start time', '');
-		$this->form_validation->set_rules('finish_time', 'finish time', '');
-		$this->form_validation->set_rules('extra_time', 'extra time', '');
-		$this->form_validation->set_rules('late_rule', 'coefficient rule', '');
+		$this->form_validation->set_rules('extra_time', 'extra time', 'integer');
 		$this->form_validation->set_rules('name[]', 'problem name', 'required|max_length[50]');
 		$this->form_validation->set_rules('score[]', 'problem score', 'required|integer');
 		$this->form_validation->set_rules('c_time_limit[]', 'C/C++ time limit', 'required|integer');

@@ -97,10 +97,10 @@ class Install extends CI_Controller
 				'open'          => array('type' => 'TINYINT', 'constraint' => 1),
 				'scoreboard'    => array('type' => 'TINYINT', 'constraint' => 1),
 				'description'   => array('type' => 'TEXT', 'default' => ''),
-				'start_time'    => array('type' => $DATETIME),
-				'finish_time'   => array('type' => $DATETIME),
-				'extra_time'    => array('type' => 'INT', 'constraint' => 11),
-				'late_rule'     => array('type' => 'TEXT'),
+				'start_time'    => array('type' => $DATETIME, 'null' => TRUE),
+				'finish_time'   => array('type' => $DATETIME, 'null' => TRUE),
+				'extra_time'    => array('type' => 'INT', 'constraint' => 11, 'null' => TRUE),
+				'late_rule'     => array('type' => 'TEXT', 'null' => TRUE),
 			);
 			$this->dbforge->add_field($fields);
 			$this->dbforge->add_key('id', TRUE); // PRIMARY KEY
@@ -146,8 +146,8 @@ class Install extends CI_Controller
 
 			// create table 'queue'
 			$fields = array(
-				'id'                => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
-				'submit_id'         => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE),
+				'id'                => array('type' => 'INT', 'constraint' => 12, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'submit_id'         => array('type' => 'INT', 'constraint' => 12, 'unsigned' => TRUE),
 				'username'          => array('type' => 'VARCHAR', 'constraint' => 20),
 				'assignment'        => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
 				'problem'           => array('type' => 'SMALLINT', 'constraint' => 4, 'unsigned' => TRUE),
